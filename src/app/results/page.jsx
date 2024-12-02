@@ -1383,7 +1383,7 @@ export default function DiscountResults() {
             <Button
               variant="ghost"
               className="absolute left-8 top-8 text-gray-400 hover:bg-gray-800/50 hover:text-white"
-              onClick={() => navigate.push("/contract-discounts")}
+              onClick={() => navigate.push("/")}
             >
               <ArrowLeft className="mr-2 h-5 w-5" />
               Back
