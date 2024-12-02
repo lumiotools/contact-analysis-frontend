@@ -716,7 +716,12 @@ export default function DiscountResults() {
   };
 
   useEffect(() => {
-    fetchData();
+    // fetchData();
+    setLoading(true);
+    setTimeout(() => {
+      setAnalysis(DUMMY_DATA);
+      setLoading(false);
+    }, 20*1000);
   }, []);
 
   if (loading) {
