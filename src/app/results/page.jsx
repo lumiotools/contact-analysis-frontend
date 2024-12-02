@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NegotiationChatbot } from "@/components/negotiation-chatbot";
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SavingsMetrics from "@/components/SavingsMetrics";
+import { LoadingAnimation } from "@/components/loading-animation";
 
 const serviceData = [
   {
@@ -129,515 +130,598 @@ function DiscountRow({ service, isActive, onToggle }) {
   );
 }
 
+const DUMMY_DATA = {
+  ...{
+    domesticAir: {
+      "Domestic Air Service Level": {
+        "Next Day Air": {
+          Letter: {
+            "Weight Range": "All",
+            "Current UPS": "61.00%",
+          },
+          Package: {
+            "Weight Range": "All",
+            "Current UPS": "61.00%",
+          },
+        },
+        "Next Day Air Saver": {
+          Letter: {
+            "Weight Range": "All",
+            "Current UPS": "61.00%",
+          },
+          Package: {
+            "Weight Range": "All",
+            "Current UPS": "61.00%",
+          },
+        },
+        "2nd Day AM": {
+          Letter: {
+            "Weight Range": "All",
+            "Current UPS": "59.00%",
+          },
+          Package: {
+            "Weight Range": "All",
+            "Current UPS": "59.00%",
+          },
+        },
+        "2nd Day Air": {
+          Letter: {
+            "Weight Range": "All",
+            "Current UPS": "59.00%",
+          },
+          Package: {
+            "Weight Range": "All",
+            "Current UPS": "59.00%",
+          },
+        },
+        "3 Day Select": {
+          Package: {
+            "Weight Range": "All",
+            "Current UPS": "51.00%",
+          },
+        },
+        "Next Day Air CWT": {
+          "Weight Range": "All",
+          "Current UPS": null,
+        },
+        "Next Day Air Saver CWT": {
+          "Weight Range": "All",
+          "Current UPS": null,
+        },
+        "2nd Day AM CWT": {
+          "Weight Range": "All",
+          "Current UPS": null,
+        },
+        "2nd Day Air CWT": {
+          "Weight Range": "All",
+          "Current UPS": null,
+        },
+        "3 Day Select CWT": {
+          "Weight Range": "All",
+          "Current UPS": null,
+        },
+      },
+    },
+    accesorials: [
+      {
+        ACCESSORIAL_CHARGE: "DAS Comm",
+        TERM: "Air",
+        CURRENT_UPS: null,
+      },
+      {
+        ACCESSORIAL_CHARGE: "DAS Ext Comm",
+        TERM: "Air",
+        CURRENT_UPS: null,
+      },
+      {
+        ACCESSORIAL_CHARGE: "DAS Resi",
+        TERM: "Air",
+        CURRENT_UPS: null,
+      },
+      {
+        ACCESSORIAL_CHARGE: "DAS Ext Resi",
+        TERM: "Air",
+        CURRENT_UPS: null,
+      },
+      {
+        ACCESSORIAL_CHARGE: "DAS Comm",
+        TERM: "Ground",
+        CURRENT_UPS: null,
+      },
+      {
+        ACCESSORIAL_CHARGE: "DAS Ext Comm",
+        TERM: "Ground",
+        CURRENT_UPS: null,
+      },
+      {
+        ACCESSORIAL_CHARGE: "DAS Resi",
+        TERM: "Ground",
+        CURRENT_UPS: null,
+      },
+      {
+        ACCESSORIAL_CHARGE: "DAS Ext Resi",
+        TERM: "Ground",
+        CURRENT_UPS: null,
+      },
+      {
+        ACCESSORIAL_CHARGE: "Residential Fee",
+        TERM: "Air",
+        CURRENT_UPS: null,
+      },
+      {
+        ACCESSORIAL_CHARGE: "Residential Fee",
+        TERM: "Ground",
+        CURRENT_UPS: null,
+      },
+      {
+        ACCESSORIAL_CHARGE: "Additional Handling - ALL",
+        TERM: "Domestic",
+        CURRENT_UPS: "25.00% Off",
+      },
+      {
+        ACCESSORIAL_CHARGE: "Additional Handling - ALL",
+        TERM: "Export",
+        CURRENT_UPS: "25.00% Off",
+      },
+      {
+        ACCESSORIAL_CHARGE: "Duty and Tax Forwarding",
+        TERM: "Export",
+        CURRENT_UPS: "100.00% Off Effective Rates",
+      },
+    ],
+  },
+  ...{
+    domesticGround1: {
+      "DOMESTIC GROUND SERVICE LEVEL": {
+        "UPS® Ground - Commercial Package - Prepaid": {
+          "Weight Range": "All",
+          "Current UPS": "11.00%",
+        },
+        "UPS® Ground - Residential Package - Prepaid": {
+          "Weight Range": "All",
+          "Current UPS": "11.00%",
+        },
+      },
+    },
+    domesticGround2: {
+      "DOMESTIC GROUND SERVICE LEVEL": {
+        "UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates":
+          {
+            "1-5 lbs": "34.00%",
+            "6-10 lbs": "34.00%",
+            "11-20 lbs": "34.00%",
+            "21-30 lbs": "34.00%",
+            "31-50 lbs": "34.00%",
+            "51-70 lbs": "34.00%",
+            "71-150 lbs": "34.00%",
+            "151 lbs+": "34.00%",
+          },
+        "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates":
+          {
+            "1-5 lbs": "20.00%",
+            "6-10 lbs": "22.00%",
+            "11-20 lbs": "25.00%",
+            "21-30 lbs": "27.00%",
+            "31-50 lbs": "30.00%",
+            "51-70 lbs": "30.00%",
+            "71-150 lbs": "30.00%",
+            "151 lbs+": "30.00%",
+          },
+      },
+    },
+    domesticGround3: {
+      "DOMESTIC GROUND SERVICE LEVEL": {
+        "Ground CWT": {
+          "Weight Range": "All",
+          "Current UPS": "21.00%",
+          Discount: "21.00%",
+          Tier: "04",
+        },
+      },
+    },
+  },
+  ...{
+    international1: {
+      "INTERNATIONAL SERVICE LEVEL": {
+        Export: {
+          "UPS Worldwide Express®": {
+            Letter: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+            },
+            Document: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+            },
+            Pak: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+            },
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+            },
+          },
+          "UPS Worldwide Saver®": {
+            Letter: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+            },
+            Document: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+            },
+            Pak: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+            },
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+            },
+          },
+          "UPS Worldwide Expedited®": {
+            Document: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+            },
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+            },
+          },
+          "UPS® Standard to Canada": {
+            "Weight Range": "All",
+            "Current UPS": "19.00%",
+          },
+          "UPS® Standard to Mexico": {
+            "Weight Range": "All",
+            "Current UPS": "15.20%",
+          },
+        },
+        Import: {
+          "UPS Worldwide Express®": {
+            Letter: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+            },
+            Document: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+            },
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+            },
+          },
+          "UPS Worldwide Saver®": {
+            Letter: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+            },
+            Document: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+            },
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+            },
+          },
+          "UPS Worldwide Expedited®": {
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+            },
+          },
+          "UPS® Standard from Canada": {
+            "Weight Range": "All",
+            "Current UPS": "19.00%",
+          },
+          "UPS® Standard from Mexico": {
+            "Weight Range": "All",
+            "Current UPS": "16.00%",
+          },
+        },
+      },
+    },
+    international2: {
+      "International Service Level": {
+        "Export UPS Worldwide Express®": {
+          "Letter - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "53.00%",
+          },
+          "Document - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": null,
+          },
+          "Pak - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": null,
+          },
+          "Package - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "60.00%",
+          },
+        },
+        "Export UPS Worldwide Saver®": {
+          "Letter - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "53.00%",
+          },
+          "Document - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": null,
+          },
+          "Pak - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": null,
+          },
+          "Package - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "60.00%",
+          },
+        },
+        "Export UPS Worldwide Expedited®": {
+          "Document - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": null,
+          },
+          "Package - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "60.00%",
+          },
+        },
+        "Import UPS Worldwide Express®": {
+          "Letter - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "33.00%",
+          },
+          "Document - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "33.00%",
+          },
+          "Package - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "33.00%",
+          },
+        },
+        "Import UPS Worldwide Saver®": {
+          "Letter - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "33.00%",
+          },
+          "Document - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "33.00%",
+          },
+          "Package - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "33.00%",
+          },
+        },
+        "Import UPS Worldwide Expedited®": {
+          "Package - Incentives Off Effective Rates": {
+            "Weight Range": "All",
+            "Current UPS": "33.00%",
+          },
+        },
+      },
+    },
+    response5: {
+      "INTERNATIONAL SERVICE LEVEL": {
+        Export: {
+          "UPS Worldwide Express®": {
+            Letter: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+              "Incentives Off Effective Rates": "53.00%",
+            },
+            Document: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+              "Incentives Off Effective Rates": null,
+            },
+            Pak: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+              "Incentives Off Effective Rates": null,
+            },
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+              "Incentives Off Effective Rates": "60.00%",
+            },
+          },
+          "UPS Worldwide Saver®": {
+            Letter: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+              "Incentives Off Effective Rates": "53.00%",
+            },
+            Document: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+              "Incentives Off Effective Rates": null,
+            },
+            Pak: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+              "Incentives Off Effective Rates": null,
+            },
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+              "Incentives Off Effective Rates": "60.00%",
+            },
+          },
+          "UPS Worldwide Expedited®": {
+            Document: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+              "Incentives Off Effective Rates": null,
+            },
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "15.20%",
+              "Incentives Off Effective Rates": "60.00%",
+            },
+          },
+          "UPS® Standard to Canada": {
+            "Weight Range": "All",
+            "Current UPS": "19.00%",
+          },
+          "UPS® Standard to Mexico": {
+            "Weight Range": "All",
+            "Current UPS": "15.20%",
+          },
+        },
+        Import: {
+          "UPS Worldwide Express®": {
+            Letter: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+              "Incentives Off Effective Rates": "33.00%",
+            },
+            Document: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+              "Incentives Off Effective Rates": "33.00%",
+            },
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+              "Incentives Off Effective Rates": "33.00%",
+            },
+          },
+          "UPS Worldwide Saver®": {
+            Letter: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+              "Incentives Off Effective Rates": "33.00%",
+            },
+            Document: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+              "Incentives Off Effective Rates": "33.00%",
+            },
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+              "Incentives Off Effective Rates": "33.00%",
+            },
+          },
+          "UPS Worldwide Expedited®": {
+            Package: {
+              "Weight Range": "All",
+              "Current UPS": "16.00%",
+              "Incentives Off Effective Rates": "33.00%",
+            },
+          },
+          "UPS® Standard from Canada": {
+            "Weight Range": "All",
+            "Current UPS": "19.00%",
+          },
+          "UPS® Standard from Mexico": {
+            "Weight Range": "All",
+            "Current UPS": "16.00%",
+          },
+        },
+      },
+    },
+  },
+};
+
 export default function DiscountResults() {
   // const location = useLocation();
   const location = {};
   const navigate = useRouter();
   const { formData } = location?.state || {};
   const [activeRowIndex, setActiveRowIndex] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [analysis, setAnalysis] = useState({
-    ...{
-      domesticAir: {
-        "Domestic Air Service Level": {
-          "Next Day Air": {
-            Letter: {
-              "Weight Range": "All",
-              "Current UPS": "61.00%",
-            },
-            Package: {
-              "Weight Range": "All",
-              "Current UPS": "61.00%",
-            },
-          },
-          "Next Day Air Saver": {
-            Letter: {
-              "Weight Range": "All",
-              "Current UPS": "61.00%",
-            },
-            Package: {
-              "Weight Range": "All",
-              "Current UPS": "61.00%",
-            },
-          },
-          "2nd Day AM": {
-            Letter: {
-              "Weight Range": "All",
-              "Current UPS": "59.00%",
-            },
-            Package: {
-              "Weight Range": "All",
-              "Current UPS": "59.00%",
-            },
-          },
-          "2nd Day Air": {
-            Letter: {
-              "Weight Range": "All",
-              "Current UPS": "59.00%",
-            },
-            Package: {
-              "Weight Range": "All",
-              "Current UPS": "59.00%",
-            },
-          },
-          "3 Day Select": {
-            Package: {
-              "Weight Range": "All",
-              "Current UPS": "51.00%",
-            },
-          },
-          "Next Day Air CWT": {
-            "Weight Range": "All",
-            "Current UPS": null,
-          },
-          "Next Day Air Saver CWT": {
-            "Weight Range": "All",
-            "Current UPS": null,
-          },
-          "2nd Day AM CWT": {
-            "Weight Range": "All",
-            "Current UPS": null,
-          },
-          "2nd Day Air CWT": {
-            "Weight Range": "All",
-            "Current UPS": null,
-          },
-          "3 Day Select CWT": {
-            "Weight Range": "All",
-            "Current UPS": null,
-          },
-        },
-      },
-      accesorials: [
-        {
-          ACCESSORIAL_CHARGE: "DAS Comm",
-          TERM: "Air",
-          CURRENT_UPS: null,
-        },
-        {
-          ACCESSORIAL_CHARGE: "DAS Ext Comm",
-          TERM: "Air",
-          CURRENT_UPS: null,
-        },
-        {
-          ACCESSORIAL_CHARGE: "DAS Resi",
-          TERM: "Air",
-          CURRENT_UPS: null,
-        },
-        {
-          ACCESSORIAL_CHARGE: "DAS Ext Resi",
-          TERM: "Air",
-          CURRENT_UPS: null,
-        },
-        {
-          ACCESSORIAL_CHARGE: "DAS Comm",
-          TERM: "Ground",
-          CURRENT_UPS: null,
-        },
-        {
-          ACCESSORIAL_CHARGE: "DAS Ext Comm",
-          TERM: "Ground",
-          CURRENT_UPS: null,
-        },
-        {
-          ACCESSORIAL_CHARGE: "DAS Resi",
-          TERM: "Ground",
-          CURRENT_UPS: null,
-        },
-        {
-          ACCESSORIAL_CHARGE: "DAS Ext Resi",
-          TERM: "Ground",
-          CURRENT_UPS: null,
-        },
-        {
-          ACCESSORIAL_CHARGE: "Residential Fee",
-          TERM: "Air",
-          CURRENT_UPS: null,
-        },
-        {
-          ACCESSORIAL_CHARGE: "Residential Fee",
-          TERM: "Ground",
-          CURRENT_UPS: null,
-        },
-        {
-          ACCESSORIAL_CHARGE: "Additional Handling - ALL",
-          TERM: "Domestic",
-          CURRENT_UPS: "25.00% Off",
-        },
-        {
-          ACCESSORIAL_CHARGE: "Additional Handling - ALL",
-          TERM: "Export",
-          CURRENT_UPS: "25.00% Off",
-        },
-        {
-          ACCESSORIAL_CHARGE: "Duty and Tax Forwarding",
-          TERM: "Export",
-          CURRENT_UPS: "100.00% Off Effective Rates",
-        },
-      ],
-    },
-    ...{
-      domesticGround1: {
-        "DOMESTIC GROUND SERVICE LEVEL": {
-          "UPS® Ground - Commercial Package - Prepaid": {
-            "Weight Range": "All",
-            "Current UPS": "11.00%",
-          },
-          "UPS® Ground - Residential Package - Prepaid": {
-            "Weight Range": "All",
-            "Current UPS": "11.00%",
-          },
-        },
-      },
-      domesticGround2: {
-        "DOMESTIC GROUND SERVICE LEVEL": {
-          "UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates":
-            {
-              "1-5 lbs": "34.00%",
-              "6-10 lbs": "34.00%",
-              "11-20 lbs": "34.00%",
-              "21-30 lbs": "34.00%",
-              "31-50 lbs": "34.00%",
-              "51-70 lbs": "34.00%",
-              "71-150 lbs": "34.00%",
-              "151 lbs+": "34.00%",
-            },
-          "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates":
-            {
-              "1-5 lbs": "20.00%",
-              "6-10 lbs": "22.00%",
-              "11-20 lbs": "25.00%",
-              "21-30 lbs": "27.00%",
-              "31-50 lbs": "30.00%",
-              "51-70 lbs": "30.00%",
-              "71-150 lbs": "30.00%",
-              "151 lbs+": "30.00%",
-            },
-        },
-      },
-      domesticGround3: {
-        "DOMESTIC GROUND SERVICE LEVEL": {
-          "Ground CWT": {
-            "Weight Range": "All",
-            "Current UPS": "21.00%",
-            Discount: "21.00%",
-            Tier: "04",
-          },
-        },
-      },
-    },
-    ...{
-      international1: {
-        "INTERNATIONAL SERVICE LEVEL": {
-          Export: {
-            "UPS Worldwide Express®": {
-              Letter: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-              },
-              Document: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-              },
-              Pak: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-              },
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-              },
-            },
-            "UPS Worldwide Saver®": {
-              Letter: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-              },
-              Document: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-              },
-              Pak: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-              },
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-              },
-            },
-            "UPS Worldwide Expedited®": {
-              Document: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-              },
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-              },
-            },
-            "UPS® Standard to Canada": {
-              "Weight Range": "All",
-              "Current UPS": "19.00%",
-            },
-            "UPS® Standard to Mexico": {
-              "Weight Range": "All",
-              "Current UPS": "15.20%",
-            },
-          },
-          Import: {
-            "UPS Worldwide Express®": {
-              Letter: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-              },
-              Document: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-              },
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-              },
-            },
-            "UPS Worldwide Saver®": {
-              Letter: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-              },
-              Document: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-              },
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-              },
-            },
-            "UPS Worldwide Expedited®": {
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-              },
-            },
-            "UPS® Standard from Canada": {
-              "Weight Range": "All",
-              "Current UPS": "19.00%",
-            },
-            "UPS® Standard from Mexico": {
-              "Weight Range": "All",
-              "Current UPS": "16.00%",
-            },
-          },
-        },
-      },
-      international2: {
-        "International Service Level": {
-          "Export UPS Worldwide Express®": {
-            "Letter - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "53.00%",
-            },
-            "Document - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": null,
-            },
-            "Pak - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": null,
-            },
-            "Package - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "60.00%",
-            },
-          },
-          "Export UPS Worldwide Saver®": {
-            "Letter - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "53.00%",
-            },
-            "Document - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": null,
-            },
-            "Pak - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": null,
-            },
-            "Package - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "60.00%",
-            },
-          },
-          "Export UPS Worldwide Expedited®": {
-            "Document - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": null,
-            },
-            "Package - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "60.00%",
-            },
-          },
-          "Import UPS Worldwide Express®": {
-            "Letter - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "33.00%",
-            },
-            "Document - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "33.00%",
-            },
-            "Package - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "33.00%",
-            },
-          },
-          "Import UPS Worldwide Saver®": {
-            "Letter - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "33.00%",
-            },
-            "Document - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "33.00%",
-            },
-            "Package - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "33.00%",
-            },
-          },
-          "Import UPS Worldwide Expedited®": {
-            "Package - Incentives Off Effective Rates": {
-              "Weight Range": "All",
-              "Current UPS": "33.00%",
-            },
-          },
-        },
-      },
-      response5: {
-        "INTERNATIONAL SERVICE LEVEL": {
-          Export: {
-            "UPS Worldwide Express®": {
-              Letter: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-                "Incentives Off Effective Rates": "53.00%",
-              },
-              Document: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-                "Incentives Off Effective Rates": null,
-              },
-              Pak: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-                "Incentives Off Effective Rates": null,
-              },
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-                "Incentives Off Effective Rates": "60.00%",
-              },
-            },
-            "UPS Worldwide Saver®": {
-              Letter: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-                "Incentives Off Effective Rates": "53.00%",
-              },
-              Document: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-                "Incentives Off Effective Rates": null,
-              },
-              Pak: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-                "Incentives Off Effective Rates": null,
-              },
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-                "Incentives Off Effective Rates": "60.00%",
-              },
-            },
-            "UPS Worldwide Expedited®": {
-              Document: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-                "Incentives Off Effective Rates": null,
-              },
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "15.20%",
-                "Incentives Off Effective Rates": "60.00%",
-              },
-            },
-            "UPS® Standard to Canada": {
-              "Weight Range": "All",
-              "Current UPS": "19.00%",
-            },
-            "UPS® Standard to Mexico": {
-              "Weight Range": "All",
-              "Current UPS": "15.20%",
-            },
-          },
-          Import: {
-            "UPS Worldwide Express®": {
-              Letter: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-                "Incentives Off Effective Rates": "33.00%",
-              },
-              Document: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-                "Incentives Off Effective Rates": "33.00%",
-              },
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-                "Incentives Off Effective Rates": "33.00%",
-              },
-            },
-            "UPS Worldwide Saver®": {
-              Letter: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-                "Incentives Off Effective Rates": "33.00%",
-              },
-              Document: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-                "Incentives Off Effective Rates": "33.00%",
-              },
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-                "Incentives Off Effective Rates": "33.00%",
-              },
-            },
-            "UPS Worldwide Expedited®": {
-              Package: {
-                "Weight Range": "All",
-                "Current UPS": "16.00%",
-                "Incentives Off Effective Rates": "33.00%",
-              },
-            },
-            "UPS® Standard from Canada": {
-              "Weight Range": "All",
-              "Current UPS": "19.00%",
-            },
-            "UPS® Standard from Mexico": {
-              "Weight Range": "All",
-              "Current UPS": "16.00%",
-            },
-          },
-        },
-      },
-    },
-  });
+  const [analysis, setAnalysis] = useState({});
+
+  const handleRowToggle = (index) => {
+    setActiveRowIndex(activeRowIndex === index ? null : index);
+  };
+
+  const fetchData = async () => {
+    let data = window.localStorage.getItem("data");
+
+    if (!data) {
+      navigate.replace("/");
+    }
+
+    data = JSON.parse(data);
+
+    if(!data?.file_name_1 || !data?.file_name_2 || !data?.exactWeeklyBandRange) {
+      navigate.replace("/");
+    }
+
+    const responses = await Promise.all([
+      fetch(process.env.NEXT_PUBLIC_DOMESTIC_ACCESORIALS_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: data.file_name_1,
+          weeklyChargesBand: data.exactWeeklyBandRange,
+        }),
+      }),
+      fetch(process.env.NEXT_PUBLIC_DOMESTIC_GROUND_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: data.file_name_1,
+          weeklyChargesBand: data.exactWeeklyBandRange,
+        }),
+      }),
+
+      fetch(process.env.NEXT_PUBLIC_INTERNATIONAL_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fileName: data.file_name_2,
+          weeklyChargesBand: data.exactWeeklyBandRange,
+        }),
+      }),
+    ]);
+
+    const responseJson = await Promise.all(
+      responses.map((response) => response.json())
+    );
+
+    console.log(responseJson);
+
+    let finalData = {};
+
+    responseJson.forEach((response) => {
+      if (response.detail) {
+        finalData = null;
+      } else {
+        if (finalData) {
+          finalData = {
+            ...finalData,
+            ...response,
+          };
+        }
+      }
+    });
+
+    if (finalData) {
+      setAnalysis(finalData);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return <LoadingAnimation />;
+  }
 
   const domesticAirServiceLevels = [];
   const domesticGroundServiceLevels = [];
@@ -693,12 +777,12 @@ export default function DiscountResults() {
         name: service,
         weightRange: weight,
         discount:
-          Number(weightObject[weight]?.replace("%", "")) +
-          Number(
+          (Number(weightObject[weight]?.replace("%", "")) || 0) +
+          (Number(
             analysis.domesticGround1["DOMESTIC GROUND SERVICE LEVEL"][service][
               "Current UPS"
             ]?.replace("%", "")
-          ),
+          ) || 0),
       });
     });
   });
@@ -740,28 +824,28 @@ export default function DiscountResults() {
             ]?.["Letter - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Document - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Pak - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Package - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0
+          ) || Infinity
         );
       }
 
@@ -773,7 +857,7 @@ export default function DiscountResults() {
             analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"][
               service
             ]?.Letter?.["Current UPS"]?.replace("%", "")
-          ) + Number(additionalDiscount),
+          ) +( Number(additionalDiscount) ===Infinity ? 0 : Number(additionalDiscount)),
       });
     }
     if (
@@ -788,6 +872,8 @@ export default function DiscountResults() {
         ]?.replace("%", "")
       );
 
+      console.log("871", additionalDiscount);
+
       if (!additionalDiscount) {
         additionalDiscount = Math.min(
           Number(
@@ -796,28 +882,28 @@ export default function DiscountResults() {
             ]?.["Letter - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Document - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Pak - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Package - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0
+          ) || Infinity
         );
       }
 
@@ -829,7 +915,7 @@ export default function DiscountResults() {
             analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"][
               service
             ]?.Document?.["Current UPS"]?.replace("%", "")
-          ) + Number(additionalDiscount),
+          ) +( Number(additionalDiscount) ===Infinity ? 0 : Number(additionalDiscount)),
       });
     }
 
@@ -854,28 +940,28 @@ export default function DiscountResults() {
             ]?.["Letter - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Document - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Pak - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Package - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0
+          ) || Infinity
         );
       }
 
@@ -887,7 +973,7 @@ export default function DiscountResults() {
             analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"][
               service
             ]?.Pak?.["Current UPS"]?.replace("%", "")
-          ) + Number(additionalDiscount),
+          ) +( Number(additionalDiscount) ===Infinity ? 0 : Number(additionalDiscount)),
       });
     }
 
@@ -911,28 +997,28 @@ export default function DiscountResults() {
             ]?.["Letter - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Document - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Pak - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Export " + service
             ]?.["Package - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0
+          ) || Infinity
         );
       }
       internationalServiceLevels.push({
@@ -943,7 +1029,7 @@ export default function DiscountResults() {
             analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"][
               service
             ]?.Package?.["Current UPS"]?.replace("%", "")
-          ) + Number(additionalDiscount),
+          ) +( Number(additionalDiscount) ===Infinity ? 0 : Number(additionalDiscount)),
       });
     }
 
@@ -959,14 +1045,14 @@ export default function DiscountResults() {
           ]?.["Letter - Incentives Off Effective Rates"]?.[
             "Current UPS"
           ]?.replace("%", "")
-        ) || 0,
+        ) || Infinity,
         Number(
           analysis.international2["International Service Level"][
             "Export " + service
           ]?.["Document - Incentives Off Effective Rates"]?.[
             "Current UPS"
           ]?.replace("%", "")
-        ) || 0,
+        ) || Infinity,
         Number(
           analysis.international2["International Service Level"][
             "Export " + service
@@ -974,14 +1060,14 @@ export default function DiscountResults() {
             "%",
             ""
           )
-        ) || 0,
+        ) || Infinity,
         Number(
           analysis.international2["International Service Level"][
             "Export " + service
           ]?.["Package - Incentives Off Effective Rates"]?.[
             "Current UPS"
           ]?.replace("%", "")
-        ) || 0
+        ) || Infinity
       );
 
       internationalServiceLevels.push({
@@ -992,7 +1078,7 @@ export default function DiscountResults() {
             analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"][
               service
             ]?.["Current UPS"]?.replace("%", "")
-          ) + Number(additionalDiscount),
+          ) +( Number(additionalDiscount) ===Infinity ? 0 : Number(additionalDiscount)),
       });
     }
   });
@@ -1020,28 +1106,28 @@ export default function DiscountResults() {
             ]?.["Letter - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Document - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Pak - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Package - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0
+          ) || Infinity
         );
       }
 
@@ -1053,7 +1139,7 @@ export default function DiscountResults() {
             analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Import"][
               service
             ]?.Letter?.["Current UPS"]?.replace("%", "")
-          ) + Number(additionalDiscount),
+          ) +( Number(additionalDiscount) ===Infinity ? 0 : Number(additionalDiscount)),
       });
     }
     if (
@@ -1076,28 +1162,28 @@ export default function DiscountResults() {
             ]?.["Letter - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Document - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Pak - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Package - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0
+          ) || Infinity
         );
       }
 
@@ -1109,7 +1195,7 @@ export default function DiscountResults() {
             analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Import"][
               service
             ]?.Document?.["Current UPS"]?.replace("%", "")
-          ) + Number(additionalDiscount),
+          ) +( Number(additionalDiscount) ===Infinity ? 0 : Number(additionalDiscount)),
       });
     }
 
@@ -1134,28 +1220,28 @@ export default function DiscountResults() {
             ]?.["Letter - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Document - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Pak - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Package - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0
+          ) || Infinity
         );
       }
 
@@ -1167,7 +1253,7 @@ export default function DiscountResults() {
             analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Import"][
               service
             ]?.Pak?.["Current UPS"]?.replace("%", "")
-          ) + Number(additionalDiscount),
+          ) +( Number(additionalDiscount) ===Infinity ? 0 : Number(additionalDiscount)),
       });
     }
 
@@ -1191,28 +1277,28 @@ export default function DiscountResults() {
             ]?.["Letter - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Document - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Pak - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0,
+          ) || Infinity,
           Number(
             analysis.international2["International Service Level"][
               "Import " + service
             ]?.["Package - Incentives Off Effective Rates"]?.[
               "Current UPS"
             ]?.replace("%", "")
-          ) || 0
+          ) || Infinity
         );
       }
 
@@ -1240,14 +1326,14 @@ export default function DiscountResults() {
           ]?.["Letter - Incentives Off Effective Rates"]?.[
             "Current UPS"
           ]?.replace("%", "")
-        ) || 0,
+        ) || Infinity,
         Number(
           analysis.international2["International Service Level"][
             "Import " + service
           ]?.["Document - Incentives Off Effective Rates"]?.[
             "Current UPS"
           ]?.replace("%", "")
-        ) || 0,
+        ) || Infinity,
         Number(
           analysis.international2["International Service Level"][
             "Import " + service
@@ -1255,14 +1341,14 @@ export default function DiscountResults() {
             "%",
             ""
           )
-        ) || 0,
+        ) || Infinity,
         Number(
           analysis.international2["International Service Level"][
             "Import " + service
           ]?.["Package - Incentives Off Effective Rates"]?.[
             "Current UPS"
           ]?.replace("%", "")
-        ) || 0
+        ) || Infinity
       );
 
       internationalServiceLevels.push({
@@ -1273,7 +1359,7 @@ export default function DiscountResults() {
             analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Import"][
               service
             ]?.["Current UPS"]?.replace("%", "")
-          ) + Number(additionalDiscount),
+          ) +( Number(additionalDiscount) ===Infinity ? 0 : Number(additionalDiscount)),
       });
     }
   });
@@ -1286,65 +1372,6 @@ export default function DiscountResults() {
       discount: accessorial.CURRENT_UPS ?? 0,
     });
   });
-
-  const handleRowToggle = (index) => {
-    setActiveRowIndex(activeRowIndex === index ? null : index);
-  };
-
-  const fetchData = async () => {
-    let data = window.localStorage.getItem("data");
-
-    if (!data) {
-      navigate.replace("/");
-    }
-
-    data = JSON.parse(data);
-
-    const responses = await Promise.all([
-      fetch(process.env.NEXT_PUBLIC_DOMESTIC_ACCESORIALS_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileName: data.file_name_1,
-          weeklyChargesBand: data.exactWeeklyBandRange,
-        }),
-      }),
-      fetch(process.env.NEXT_PUBLIC_DOMESTIC_GROUND_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileName: data.file_name_1,
-          weeklyChargesBand: data.exactWeeklyBandRange,
-        }),
-      }),
-
-      fetch(process.env.NEXT_PUBLIC_INTERNATIONAL_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileName: data.file_name_2,
-          weeklyChargesBand: data.exactWeeklyBandRange,
-        }),
-      }),
-    ]);
-
-    const responseJson = await Promise.all(
-      responses.map((response) => response.json())
-    );
-
-    const finalData = [
-      ...responseJson[0],
-      ...responseJson[1],
-      ...responseJson[2],
-    ];
-
-    setAnalysis(finalData);
-  };
-
-  useEffect(() => {
-    fetchData();
-    console.log(analysis);
-  }, []);
 
   return (
     <div className="h-screen bg-[#1C1C28] flex items-center justify-center w-full">
@@ -1462,8 +1489,7 @@ export default function DiscountResults() {
                   </div>
                 </div> */}
 
-
-                  <SavingsMetrics/>
+                <SavingsMetrics />
 
                 {/* Contract Analysis Component */}
                 <ContractAnalysis />
