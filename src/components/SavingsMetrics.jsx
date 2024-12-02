@@ -6,30 +6,14 @@ import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 
 export default function SavingsMetrics() {
-  const [showSecondary, setShowSecondary] = useState(false)
+  const [showSecondary, setShowSecondary] = useState(true)
   const [progress, setProgress] = useState(0)
-  const [progress1, setProgress1] = useState(0)
-  const [progress2, setProgress2] = useState(0)
-  const [progress3, setProgress3] = useState(0)
+  const [progress1, setProgress1] = useState(13)
+  const [progress2, setProgress2] = useState(40)
+  const [progress3, setProgress3] = useState(80)
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setProgress(41)
-    }, 500)
-    return () => clearTimeout(timer)
-  }, [])
 
   const handleMainClick = () => {
-    setShowSecondary(true)
-    setTimeout(() => {
-      setProgress1(13)
-      setTimeout(() => {
-        setProgress2(75)
-        setTimeout(() => {
-          setProgress3(66)
-        }, 200)
-      }, 200)
-    }, 200)
   }
 
   const MainCircularProgress = ({ size, progress, strokeWidth, children }) => {
@@ -54,35 +38,10 @@ export default function SavingsMetrics() {
           <div className="absolute inset-0">
             
 
-           <Image src="/background.gif" width={100} height={100} className="w-full h-full"/>
+           <Image src="/background.gif" width={100} height={100} className="w-full h-full opacity-70"/>
 
-            {/* <div 
-              className="w-full h-full rounded-full animate-[spin_3s_linear_infinite]"
-              style={{
-                background: `radial-gradient(circle at 30% 30%, 
-                  rgba(41, 98, 255, 0.8) 0%,
-                  rgba(0, 47, 167, 0.6) 45%,
-                  rgba(0, 21, 76, 0.4) 70%,
-                  transparent 100%)`,
-                filter: "blur(8px)",
-              }}
-            /> */}
           </div>
           <svg width={size} height={size} className="transform -rotate-90 relative z-10">
-            <motion.circle
-              initial={{ strokeDashoffset: circumference }}
-              animate={{ strokeDashoffset: offset }}
-              transition={{ duration: 1.3, ease: "easeOut" }}
-              cx={size / 2}
-              cy={size / 2}
-              r={radius}
-              stroke="url(#mainGradient)"
-              strokeWidth={strokeWidth}
-              strokeDasharray={circumference}
-              fill="transparent"
-              strokeLinecap="round"
-              // className="filter drop-shadow-[0_0_10px_rgba(41,98,255,0.7)]"
-            />
             <defs>
               <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#4B7BFF" />
@@ -158,7 +117,7 @@ export default function SavingsMetrics() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8">
+    <div className="flex flex-col items-center justify-center min-h-screen">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -166,11 +125,11 @@ export default function SavingsMetrics() {
         className="w-full max-w-5xl"
       >
         <motion.div 
-          className="flex justify-center"
-          animate={{ marginBottom: showSecondary ? "6rem" : "0" }}
+          className="flex justify-center items-center"
+          animate={{ marginBottom: "1rem" }}
           transition={{ duration: 0.5 }}
         >
-          <MainCircularProgress size={300} progress={progress} strokeWidth={30}>
+          <MainCircularProgress size={450} progress={progress} strokeWidth={30}>
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -180,12 +139,12 @@ export default function SavingsMetrics() {
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-[#2962FF] text-5xl font-bold"
+                className="text-orange-400 font-bold"
               >
-                41st
+                <span className="text-8xl">41</span><span className="text-5xl">ST</span>
               </motion.div>
-              <div className="text-white text-sm mt-2 max-w-[160px] text-center leading-tight">
-                Percentile Compared to<br />Contracts with Similar Spend
+              <div className="text-white text-xl mt-2 max-w-[240px] text-center leading-tight">
+                Percentile Compared to Contracts with Similar Spend
               </div>
             </motion.div>
           </MainCircularProgress>
@@ -198,14 +157,14 @@ export default function SavingsMetrics() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               transition={{ duration: 0.5 }}
-              className="grid grid-cols-3 gap-16"
+              className="grid grid-cols-3 gap-x-16"
             >
               {[
                 {
                   progress: progress1,
                   topText: "Can Negotiate",
                   bottomText: "Additional Discount",
-                  content: `${Math.round(progress1)}%`
+                  content: `$13%`
                 },
                 {
                   progress: progress2,
