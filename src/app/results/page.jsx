@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NegotiationChatbot } from "@/components/negotiation-chatbot";
 import DiscountDetails from "@/components/discount-details";
@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import SavingsMetrics from "@/components/SavingsMetrics";
 
 const serviceData = [
   {
@@ -153,6 +154,11 @@ export default function DiscountResults() {
     setActiveRowIndex(activeRowIndex === index ? null : index);
   };
 
+
+  useEffect(()=>{
+    console.log(localStorage.getItem('data'));
+  },[])
+
   return (
     <div
       className="h-screen bg-[#1C1C28] flex items-center justify-center w-full"
@@ -276,6 +282,9 @@ export default function DiscountResults() {
                     </div>
                   </div>
                 </div> */}
+
+
+                  <SavingsMetrics/>
 
                 {/* Contract Analysis Component */}
                 <ContractAnalysis />
