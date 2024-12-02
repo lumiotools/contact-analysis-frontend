@@ -1291,11 +1291,13 @@ export default function DiscountResults() {
   };
 
   const fetchData = async () => {
-    const data = window.localStorage.getItem("data");
+    let data = window.localStorage.getItem("data");
 
     if (!data) {
       navigate.replace("/");
     }
+
+    data = JSON.parse(data);
 
     const responses = await Promise.all([
       fetch(process.env.NEXT_PUBLIC_DOMESTIC_ACCESORIALS_API_URL, {
