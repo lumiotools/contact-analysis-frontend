@@ -22,7 +22,7 @@ export function LoadingAnimation() {
         const newProgress = oldProgress + 5;
         return newProgress >= 100 ? 100 : newProgress;
       });
-    }, 10*1000);
+    }, 20*1000);
 
     const timeTimer = setInterval(() => {
       setTimeElapsed((prevTime) => prevTime + 1);
@@ -62,7 +62,7 @@ export function LoadingAnimation() {
               Analyzing Your Contract
             </h2>
             <p className="text-sm text-gray-400">
-              This may take up to 20 seconds
+              This may take up to 200 seconds
             </p>
           </div>
 
