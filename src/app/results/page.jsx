@@ -164,129 +164,113 @@ export default function DiscountResults() {
     );
   }
 
-// Assuming `analysis` object contains domesticGround1, domesticGround2, domesticGround3
-const domesticGroundCommercialServiceLevels = [];
-const domesticGroundResidentialServiceLevels = [];
-const domesticGroundCWTLevels = [];
+const domesticGroundServiceLevels = [];
 
-// Helper function to parse a percentage string like "11.00%" to a float.
-// Returns 0 if invalid or missing.
+// Helper to parse percentages like "11.00%"
 function parsePercentage(str) {
-  if (!str || typeof str !== "string" || !str.endsWith("%")) return 0;
+  if (!str || !str.endsWith("%")) return 0;
   const val = parseFloat(str.replace("%", ""));
   return isNaN(val) ? 0 : val;
 }
 
-// 1. Extract Current UPS from domesticGround1
+// 1. Process domesticGround1 to get base Current UPS values
 let commercialCurrentUPS = 0;
 let residentialCurrentUPS = 0;
 
 if (analysis.domesticGround1 && analysis.domesticGround1["DOMESTIC GROUND SERVICE LEVEL"]) {
-  const groundData = analysis.domesticGround1["DOMESTIC GROUND SERVICE LEVEL"];
+  const groundData1 = analysis.domesticGround1["DOMESTIC GROUND SERVICE LEVEL"];
 
-  if (groundData["UPS® Ground - Commercial Package - Prepaid"]) {
+  if (groundData1["UPS® Ground - Commercial Package - Prepaid"]) {
     commercialCurrentUPS = parsePercentage(
-      groundData["UPS® Ground - Commercial Package - Prepaid"]["Current UPS"]
+      groundData1["UPS® Ground - Commercial Package - Prepaid"]["Current UPS"]
     );
+    // Display a general "All" entry (like old code did)
+    domesticGroundServiceLevels.push({
+      name: "UPS® Ground - Commercial Package - Prepaid",
+      weightRange: "All",
+      discount: commercialCurrentUPS
+    });
   }
 
-  if (groundData["UPS® Ground - Residential Package - Prepaid"]) {
+  if (groundData1["UPS® Ground - Residential Package - Prepaid"]) {
     residentialCurrentUPS = parsePercentage(
-      groundData["UPS® Ground - Residential Package - Prepaid"]["Current UPS"]
+      groundData1["UPS® Ground - Residential Package - Prepaid"]["Current UPS"]
     );
+    // Display a general "All" entry (like old code did)
+    domesticGroundServiceLevels.push({
+      name: "UPS® Ground - Residential Package - Prepaid",
+      weightRange: "All",
+      discount: residentialCurrentUPS
+    });
   }
 }
 
-// 2. Process domesticGround2 to combine incentives with Current UPS
-// We have two keys for incentives:
-// "UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates"
-// "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates"
+// 2. Process domesticGround2: Add incentive data by weight range
+// For now, incentives are null, so treat them as 0% and add to Current UPS.
 
 if (analysis.domesticGround2 && analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"]) {
   const groundData2 = analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"];
 
-  // Commercial Incentives
+  // Commercial Incentives by weight
   if (groundData2["UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates"]) {
     const commercialIncentives = groundData2["UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates"];
-    // Each key like "1-5 lbs", "6-10 lbs" etc. has a null value. We'll treat null as 0.
     Object.keys(commercialIncentives).forEach((weightRange) => {
-      // incentiveVal is null, treat as 0
-      const incentiveVal = 0;
-      const total = commercialCurrentUPS + incentiveVal;
-      const formattedTotal = `${total.toFixed(2)}%`;
-
-      domesticGroundCommercialServiceLevels.push({
+      // Incentives are null, treat as 0
+      const incentiveVal = 0; 
+      const total = commercialCurrentUPS + incentiveVal; 
+      domesticGroundServiceLevels.push({
         name: "UPS® Ground - Commercial Package - Prepaid",
         weightRange: weightRange,
-        discount: formattedTotal,
+        discount: total
       });
     });
   }
 
-  // Residential Incentives
+  // Residential Incentives by weight
   if (groundData2["UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates"]) {
     const residentialIncentives = groundData2["UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates"];
     Object.keys(residentialIncentives).forEach((weightRange) => {
-      // incentiveVal is null, treat as 0
-      const incentiveVal = 0;
-      const total = residentialCurrentUPS + incentiveVal;
-      const formattedTotal = `${total.toFixed(2)}%`;
-
-      domesticGroundResidentialServiceLevels.push({
+      const incentiveVal = 0; 
+      const total = residentialCurrentUPS + incentiveVal; 
+      domesticGroundServiceLevels.push({
         name: "UPS® Ground - Residential Package - Prepaid",
         weightRange: weightRange,
-        discount: formattedTotal,
+        discount: total
       });
     });
   }
 }
 
-// 3. Display domesticGround3 as is
-// domesticGround3 structure:
-// "DOMESTIC GROUND SERVICE LEVEL": {
-//   "Ground CWT": {
-//     "Weight Range": "All",
-//     "Current UPS": "21.00%",
-//     "Discount": "21.00%",
-//     "Tier": "04"
-//   }
-// }
-
+// 3. Process domesticGround3 as is
 if (analysis.domesticGround3 && analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]) {
   const groundData3 = analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"];
   if (groundData3["Ground CWT"]) {
-    const cwtData = groundData3["Ground CWT"];
-    // Display as is
-    domesticGroundCWTLevels.push({
+    const cwt = groundData3["Ground CWT"];
+    // Use the existing "Discount" field if present
+    const discountVal = parsePercentage(cwt["Discount"] || cwt["Current UPS"]);
+    domesticGroundServiceLevels.push({
       name: "Ground CWT",
-      weightRange: cwtData["Weight Range"],
-      discount: cwtData["Discount"] || cwtData["Current UPS"], // "Discount" already present
-      tier: cwtData["Tier"],
+      weightRange: cwt["Weight Range"],
+      discount: discountVal
     });
   }
 }
 
-// Now you have three arrays with the processed data:
-// domesticGroundCommercialServiceLevels, domesticGroundResidentialServiceLevels, domesticGroundCWTLevels
+// Now domesticGroundServiceLevels contains entries from:
+// - domesticGround1 (All ranges for commercial/residential)
+// - domesticGround2 (individual weight ranges, adding incentives = 0 for now)
+// - domesticGround3 (as is)
 
-// Example output structure:
-// domesticGroundCommercialServiceLevels: [
-//   { name: "UPS® Ground - Commercial Package - Prepaid", weightRange: "1-5 lbs", discount: "11.00%" },
-//   { name: "UPS® Ground - Commercial Package - Prepaid", weightRange: "6-10 lbs", discount: "11.00%" },
-//   ...
-// ]
+// Example final output (with current data):
+// For commercial/residential: "discount" = 11.00
+// For Ground CWT: "discount" = 21.00
+//
+// You can then map over domesticGroundServiceLevels in your UI:
+// domesticGroundServiceLevels.map((service, index) => (
+//   <DiscountRow key={index} service={service} ... />
+// ))
 
-// domesticGroundResidentialServiceLevels: [
-//   { name: "UPS® Ground - Residential Package - Prepaid", weightRange: "1-5 lbs", discount: "11.00%" },
-//   { name: "UPS® Ground - Residential Package - Prepaid", weightRange: "6-10 lbs", discount: "11.00%" },
-//   ...
-// ]
-
-// domesticGroundCWTLevels: [
-//   { name: "Ground CWT", weightRange: "All", discount: "21.00%", tier: "04" }
-// ]
-
-// You can then map over these arrays in your React components to display them as needed.
+export default domesticGroundServiceLevels;
 
 
 // Process international data
