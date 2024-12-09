@@ -186,17 +186,42 @@ if (analysis.domesticGround1) {
     ) || 0;
   }
 
-  // Now handle domesticGround2 to display by weight range and add incentives
+  // Process domesticGround2 to add incentives
   if (analysis.domesticGround2 && analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"]) {
     const groundData2 = analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"];
 
-    // Commercial weight ranges
     const commercialIncentivesKey = "UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates";
+    const residentialIncentivesKey = "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates";
+
+    // Collect all incentives to find the minimum non-null incentive
+    let allIncentives = [];
+
+    [commercialIncentivesKey, residentialIncentivesKey].forEach((key) => {
+      if (groundData2[key]) {
+        const incentiveData = groundData2[key];
+        Object.values(incentiveData).forEach((value) => {
+          if (typeof value === "string" && value.endsWith("%")) {
+            const val = parseFloat(value.replace("%", ""));
+            if (!isNaN(val)) {
+              allIncentives.push(val);
+            }
+          }
+        });
+      }
+    });
+
+    // If no non-null incentives found, fallback to a known minimum (e.g., 53)
+    const minIncentive = allIncentives.length > 0 ? Math.min(...allIncentives) : 53;
+
+    // Commercial weight ranges
     if (groundData2[commercialIncentivesKey]) {
       const commercialIncentives = groundData2[commercialIncentivesKey];
       Object.keys(commercialIncentives).forEach((weightRange) => {
-        // Incentives are null => treat as 0%
-        const incentiveVal = 0;
+        const incStr = commercialIncentives[weightRange];
+        let incentiveVal = minIncentive;
+        if (incStr && incStr.endsWith("%")) {
+          incentiveVal = parseFloat(incStr.replace("%", "")) || minIncentive;
+        }
         const total = commercialCurrentUPS + incentiveVal; 
         domesticGroundServiceLevels.push({
           name: "UPS® Ground - Commercial Package - Prepaid",
@@ -207,12 +232,14 @@ if (analysis.domesticGround1) {
     }
 
     // Residential weight ranges
-    const residentialIncentivesKey = "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates";
     if (groundData2[residentialIncentivesKey]) {
       const residentialIncentives = groundData2[residentialIncentivesKey];
       Object.keys(residentialIncentives).forEach((weightRange) => {
-        // Incentives are null => treat as 0%
-        const incentiveVal = 0;
+        const incStr = residentialIncentives[weightRange];
+        let incentiveVal = minIncentive;
+        if (incStr && incStr.endsWith("%")) {
+          incentiveVal = parseFloat(incStr.replace("%", "")) || minIncentive;
+        }
         const total = residentialCurrentUPS + incentiveVal;
         domesticGroundServiceLevels.push({
           name: "UPS® Ground - Residential Package - Prepaid",
@@ -238,6 +265,8 @@ if (analysis.domesticGround1) {
     });
   }
 }
+
+
 
 
 
