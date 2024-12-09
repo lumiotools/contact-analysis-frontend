@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { Label } from "recharts";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import { LoadingAnimation } from "@/components/loading-animation";
 
 export default function IntroPage() {
   const navigate = useRouter();
@@ -95,6 +96,10 @@ export default function IntroPage() {
       description: "Get your discount calculations in seconds",
     },
   ];
+
+  if (uploadingLoading) {
+    return <LoadingAnimation />;
+  }
 
   return (
     <div className="h-screen  bg-[#1C1C28] flex items-center justify-center w-full">

@@ -128,9 +128,9 @@ export default function DiscountResults() {
 
   useEffect(() => {
     setLoading(true);
-    setTimeout(() => {
+    // setTimeout(() => {
       fetchData();
-    }, 2000);
+    // }, 2000);
   }, []);
 
   const domesticAirServiceLevels = [];
@@ -220,9 +220,9 @@ export default function DiscountResults() {
     });
   }
 
-  if (loading) {
-    return <LoadingAnimation />;
-  }
+  // if (loading) {
+  //   return <LoadingAnimation />;
+  // }
 
   return (
     <div className="h-screen bg-[#1C1C28] flex items-center justify-center w-full">
