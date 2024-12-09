@@ -131,7 +131,7 @@ export function NegotiationChatbot() {
             <CardTitle
               className="text-lg md:text-xl font-semibold text-white"
             >
-              Contract Discount Advisor
+              Contract Discount Advisor (Coming Soon)
             </CardTitle>
           </div>
           {selectedTactic && (
