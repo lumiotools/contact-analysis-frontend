@@ -22,7 +22,7 @@ export function LoadingAnimation() {
         const newProgress = oldProgress + 5;
         return newProgress >= 100 ? 100 : newProgress;
       });
-    }, 1000);
+    }, 10*1000);
 
     const timeTimer = setInterval(() => {
       setTimeElapsed((prevTime) => prevTime + 1);
