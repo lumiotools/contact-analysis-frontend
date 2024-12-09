@@ -75,7 +75,7 @@ export default function DiscountDetails({ currentDiscount = 40 }) {
             <CardTitle
               className="text-lg md:text-xl font-semibold text-white"
             >
-              Discount Distribution Analysis
+              Discount Distribution Analysis  <span className="bg-green-500/50 py-1  px-2 rounded-full"> {"("} Coming Soon {")"}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="p-2 md:p-4">
