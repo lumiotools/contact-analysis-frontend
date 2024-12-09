@@ -165,66 +165,78 @@ export default function DiscountResults() {
   }
 
 
+//domestic res and comm
 
 if (analysis.domesticGround1) {
   const groundData1 = analysis.domesticGround1["DOMESTIC GROUND SERVICE LEVEL"];
 
-  Object.keys(groundData1).forEach((service) => {
-    // Parse Current UPS as a number
-    const currentUPSStr = groundData1[service]["Current UPS"];
-    const currentUPSVal = currentUPSStr 
-      ? parseFloat(currentUPSStr.replace("%", "")) 
-      : 0;
-    
-    // Display base entry
-    domesticGroundServiceLevels.push({
-      name: service,
-      weightRange: "All",
-      discount: currentUPSVal,
-    });
+  // Get Commercial and Residential Current UPS from domesticGround1
+  let commercialCurrentUPS = 0;
+  let residentialCurrentUPS = 0;
 
-    // Attempt to find corresponding incentives in domesticGround2
-    // The pattern is service + " - Incentives Off Effective Rates"
-    const incentivesKey = service + " - Incentives Off Effective Rates";
+  if (groundData1["UPS® Ground - Commercial Package - Prepaid"]) {
+    commercialCurrentUPS = Number(
+      groundData1["UPS® Ground - Commercial Package - Prepaid"]["Current UPS"]?.replace("%", "")
+    ) || 0;
+  }
 
-    if (
-      analysis.domesticGround2 &&
-      analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"] &&
-      analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"][incentivesKey]
-    ) {
-      const incentivesData = analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"][incentivesKey];
+  if (groundData1["UPS® Ground - Residential Package - Prepaid"]) {
+    residentialCurrentUPS = Number(
+      groundData1["UPS® Ground - Residential Package - Prepaid"]["Current UPS"]?.replace("%", "")
+    ) || 0;
+  }
 
-      // Each key in incentivesData is a weight range with a null value for now
-      Object.keys(incentivesData).forEach((weightRange) => {
-        // Incentive is null, treat as 0
-        const incentiveVal = 0; 
-        const total = currentUPSVal + incentiveVal;
+  // Now handle domesticGround2 to display by weight range and add incentives
+  if (analysis.domesticGround2 && analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"]) {
+    const groundData2 = analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"];
 
+    // Commercial weight ranges
+    const commercialIncentivesKey = "UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates";
+    if (groundData2[commercialIncentivesKey]) {
+      const commercialIncentives = groundData2[commercialIncentivesKey];
+      Object.keys(commercialIncentives).forEach((weightRange) => {
+        // Incentives are null => treat as 0%
+        const incentiveVal = 0;
+        const total = commercialCurrentUPS + incentiveVal; 
         domesticGroundServiceLevels.push({
-          name: service,
+          name: "UPS® Ground - Commercial Package - Prepaid",
           weightRange: weightRange,
           discount: total,
         });
       });
     }
-  });
-}
 
-// Add domesticGround3 "as is"
-if (
-  analysis.domesticGround3 &&
-  analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"] &&
-  analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"]
-) {
-  const cwtData = analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"];
-  const discountStr = cwtData["Discount"] || cwtData["Current UPS"];
-  const discountVal = discountStr ? parseFloat(discountStr.replace("%", "")) : 0;
+    // Residential weight ranges
+    const residentialIncentivesKey = "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates";
+    if (groundData2[residentialIncentivesKey]) {
+      const residentialIncentives = groundData2[residentialIncentivesKey];
+      Object.keys(residentialIncentives).forEach((weightRange) => {
+        // Incentives are null => treat as 0%
+        const incentiveVal = 0;
+        const total = residentialCurrentUPS + incentiveVal;
+        domesticGroundServiceLevels.push({
+          name: "UPS® Ground - Residential Package - Prepaid",
+          weightRange: weightRange,
+          discount: total,
+        });
+      });
+    }
+  }
 
-  domesticGroundServiceLevels.push({
-    name: "Ground CWT",
-    weightRange: cwtData["Weight Range"] || "All",
-    discount: discountVal,
-  });
+  // Display domesticGround3 as is
+  if (
+    analysis.domesticGround3 && 
+    analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"] &&
+    analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"]
+  ) {
+    const cwtData = analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"];
+    const cwtDiscount = Number(cwtData["Discount"]?.replace("%","") || cwtData["Current UPS"]?.replace("%", "")) || 0;
+    domesticGroundServiceLevels.push({
+      name: "Ground CWT",
+      weightRange: cwtData["Weight Range"] || "All",
+      discount: cwtDiscount,
+    });
+  }
 }
 
 
