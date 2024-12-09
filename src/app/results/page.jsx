@@ -1,3 +1,4 @@
+
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -61,7 +62,7 @@ function DiscountRow({ service, isActive, onToggle }) {
                   service.discount
                 )}`}
               >
-                ~{service.discount}{new String(service.discount).endsWith('%') ? "": new String(service.discount).includes("No") ?"":"%"}
+                ~ {service.discount}{new String(service.discount).endsWith('%') ? "" : new String(service.discount).includes("No") ?"":"%"}
               </span>
               <div className="w-32 h-2 bg-[#1C1C28] rounded-full overflow-hidden">
                 <div
