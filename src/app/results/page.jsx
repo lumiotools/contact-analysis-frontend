@@ -182,7 +182,7 @@ export default function DiscountResults() {
   }
 
 // Process international data
-if (analysis.international1) {
+if (analysis.response5) {
   Object.keys(
     analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"]
   ).forEach((service) => {
@@ -212,6 +212,8 @@ if (analysis.international1) {
     }
   });
 }
+
+
 
 
   // Process accessorial charges
