@@ -68,23 +68,15 @@ export default function ContractDiscounts() {
   ];
 
   return (
-    <div
-      className="h-screen bg-[#1C1C28] flex items-center justify-center w-full"
-    >
+    <div className="h-screen bg-[#1C1C28] flex items-center justify-center w-full">
       <div className="w-full h-full mx-auto">
-        <div
-          className="relative w-full h-full bg-[#23232F]/80  backdrop-blur-xl border border-[#2A2A36] overflow-x-hidden"
-        >
-          <div
-            className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-purple-500/20 to-orange-500/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2"
-          />
+        <div className="relative w-full h-full bg-[#23232F]/80  backdrop-blur-xl border border-[#2A2A36] overflow-x-hidden">
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-purple-500/20 to-orange-500/20 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2" />
 
           <div className="relative z-10 p-8 lg:p-12">
             <div className="max-w-7xl mx-auto">
               <div className="text-center mb-8">
-                <h1
-                  className="text-4xl lg:text-5xl font-bold text-white mb-3"
-                >
+                <h1 className="text-4xl lg:text-5xl font-bold text-white mb-3">
                   Contract Discounts
                 </h1>
                 <p className="text-xl text-gray-400">
@@ -92,13 +84,9 @@ export default function ContractDiscounts() {
                 </p>
               </div>
 
-              <div
-                className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12"
-              >
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
                 {/* Left Column - Form */}
-                <div
-                  className="bg-[#2A2A36] rounded-xl p-8 flex flex-col h-full"
-                >
+                <div className="bg-[#2A2A36] rounded-xl p-8 flex flex-col h-full">
                   <form
                     onSubmit={handleSubmit}
                     className="flex flex-col h-full"
@@ -120,45 +108,29 @@ export default function ContractDiscounts() {
                                 : "border-gray-600 hover:bg-[#2A2A36]"
                             }`}
                           >
-                            <div
-                              className="flex flex-col items-center justify-center py-4"
-                            >
+                            <div className="flex flex-col items-center justify-center py-4">
                               {isUploaded ? (
                                 <>
-                                  <CheckCircle2
-                                    className="w-12 h-12 mb-3 text-green-500"
-                                  />
+                                  <CheckCircle2 className="w-12 h-12 mb-3 text-green-500" />
 
-                                  <p
-                                    className="text-base text-green-500 mb-1"
-                                  >
+                                  <p className="text-base text-green-500 mb-1">
                                     {formData.pdf.name}
                                   </p>
-                                  <p
-                                    className="text-sm text-green-500/70"
-                                  >
+                                  <p className="text-sm text-green-500/70">
                                     Click to change file
                                   </p>
                                 </>
                               ) : (
                                 <>
-                                  <UploadIcon
-                                    className="w-12 h-12 mb-3 text-orange-500"
-                                  />
+                                  <UploadIcon className="w-12 h-12 mb-3 text-orange-500" />
 
-                                  <p
-                                    className="text-base text-gray-400 mb-1"
-                                  >
-                                    <span
-                                      className="font-semibold text-orange-500"
-                                    >
+                                  <p className="text-base text-gray-400 mb-1">
+                                    <span className="font-semibold text-orange-500">
                                       Click to upload
                                     </span>{" "}
                                     or drag and drop
                                   </p>
-                                  <p
-                                    className="text-sm text-gray-500"
-                                  >
+                                  <p className="text-sm text-gray-500">
                                     PDF (MAX. 10MB)
                                   </p>
                                 </>
@@ -178,9 +150,7 @@ export default function ContractDiscounts() {
                                 className="h-1"
                               />
 
-                              <p
-                                className="text-sm text-gray-400 mt-2"
-                              >
+                              <p className="text-sm text-gray-400 mt-2">
                                 Uploading... {uploadProgress}%
                               </p>
                             </div>
@@ -197,13 +167,11 @@ export default function ContractDiscounts() {
                             Weekly Charges ($)
                           </Label>
                           <div className="relative">
-                            <DollarSign
-                              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5"
-                            />
+                            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5" />
 
                             <Input
                               type="number"
-                              placeholder="Enter charges"
+                              placeholder="Enter weekly charges"
                               value={formData.weeklyCharges}
                               onChange={(e) =>
                                 setFormData((prev) => ({
@@ -255,13 +223,9 @@ export default function ContractDiscounts() {
                 </div>
 
                 {/* Right Column - Info Cards */}
-                <div
-                  className="bg-[#2A2A36] rounded-xl p-8 flex flex-col h-full"
-                >
+                <div className="bg-[#2A2A36] rounded-xl p-8 flex flex-col h-full">
                   <div className="flex-1">
-                    <h2
-                      className="text-2xl font-bold text-white mb-8"
-                    >
+                    <h2 className="text-2xl font-bold text-white mb-8">
                       What You'll Get
                     </h2>
                     <div className="space-y-8">
@@ -298,12 +262,8 @@ export default function ContractDiscounts() {
                       ))}
                     </div>
                   </div>
-                  <div
-                    className="mt-8 pt-8 border-t border-gray-700"
-                  >
-                    <p
-                      className="text-sm text-gray-400 text-center"
-                    >
+                  <div className="mt-8 pt-8 border-t border-gray-700">
+                    <p className="text-sm text-gray-400 text-center">
                       Join thousands of businesses saving on their shipping
                       costs
                     </p>

@@ -377,7 +377,7 @@ export default function IntroPage() {
 
                                 <Input
                                   type="number"
-                                  placeholder="Enter charges"
+                                  placeholder="Enter weekly charges"
                                   value={formData.weeklyCharges}
                                   onChange={(e) =>
                                     setFormData((prev) => ({
