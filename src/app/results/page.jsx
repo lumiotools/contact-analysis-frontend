@@ -183,35 +183,65 @@ export default function DiscountResults() {
 
 // Process international data
 if (analysis.response5) {
-  Object.keys(
-    analysis.response5["INTERNATIONAL SERVICE LEVEL"]["Export"]
-  ).forEach((service) => {
-    const exportData =
-      analysis.response5["INTERNATIONAL SERVICE LEVEL"]["Export"][
-        service
-      ];
-    if (exportData.Letter) {
-      internationalServiceLevels.push({
-        name: `Export ${service} Letter`,
-        weightRange: exportData.Letter["Weight Range"],
-        discount:
-          (exportData.Letter["Current UPS"] ?? "No Discount") +
-          (exportData.Letter["Incentives Off Effective Rates"] ? 
-            ` + ${exportData.Letter["Incentives Off Effective Rates"]}` : "")
-      });
-    }
-    if (exportData.Package) {
-      internationalServiceLevels.push({
-        name: `Export ${service} Package`,
-        weightRange: exportData.Package["Weight Range"],
-        discount:
-          (exportData.Package["Current UPS"] ?? "No Discount") +
-          (exportData.Package["Incentives Off Effective Rates"] ? 
-            ` + ${exportData.Package["Incentives Off Effective Rates"]}` : "")
-      });
-    }
+  const exportDataSection = analysis.response5["INTERNATIONAL SERVICE LEVEL"]["Export"];
+
+  // Gather all non-null incentives to find the minimum incentive
+  const incentivesArray = [];
+
+  Object.keys(exportDataSection).forEach((service) => {
+    const exportData = exportDataSection[service];
+    ["Letter", "Document", "Pak", "Package"].forEach((type) => {
+      if (exportData[type]) {
+        const incentiveStr = exportData[type]["Incentives Off Effective Rates"];
+        if (incentiveStr && incentiveStr.endsWith("%")) {
+          const incentiveVal = parseFloat(incentiveStr.replace("%", ""));
+          if (!isNaN(incentiveVal)) {
+            incentivesArray.push(incentiveVal);
+          }
+        }
+      }
+    });
+  });
+
+  // Find the minimum non-null incentive if any exist, otherwise default to 0
+  const minIncentive = incentivesArray.length > 0 
+    ? Math.min(...incentivesArray) 
+    : 0;
+
+  Object.keys(exportDataSection).forEach((service) => {
+    const exportData = exportDataSection[service];
+
+    ["Letter", "Document", "Pak", "Package"].forEach((type) => {
+      if (exportData[type]) {
+        const currentUPSStr = exportData[type]["Current UPS"];
+        const incentiveStr = exportData[type]["Incentives Off Effective Rates"];
+
+        // Parse Current UPS
+        let currentUPSVal = 0;
+        if (currentUPSStr && currentUPSStr.endsWith("%")) {
+          currentUPSVal = parseFloat(currentUPSStr.replace("%", ""));
+        }
+
+        // Parse Incentive or use min if null
+        let incentiveVal = minIncentive;
+        if (incentiveStr !== null && incentiveStr !== undefined && incentiveStr.endsWith("%")) {
+          incentiveVal = parseFloat(incentiveStr.replace("%", ""));
+        }
+
+        // Sum them
+        const total = currentUPSVal + incentiveVal;
+        const formattedTotal = isNaN(total) ? "No Discount" : `${total.toFixed(2)}%`;
+
+        internationalServiceLevels.push({
+          name: `Export ${service} ${type}`,
+          weightRange: exportData[type]["Weight Range"],
+          discount: formattedTotal,
+        });
+      }
+    });
   });
 }
+
 
 
 
