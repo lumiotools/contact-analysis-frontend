@@ -656,47 +656,8 @@ export default function DiscountResults() {
 
     data = JSON.parse(data);
 
-    if(!data?.file_name_1 || !data?.file_name_2 || !data?.exactWeeklyBandRange) {
-      navigate.replace("/");
-    }
 
-    const responses = await Promise.all([
-      fetch(process.env.NEXT_PUBLIC_DOMESTIC_ACCESORIALS_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileName: data.file_name_1,
-          weeklyChargesBand: data.exactWeeklyBandRange,
-        }),
-      }),
-      fetch(process.env.NEXT_PUBLIC_DOMESTIC_GROUND_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileName: data.file_name_1,
-          weeklyChargesBand: data.exactWeeklyBandRange,
-        }),
-      }),
-
-      fetch(process.env.NEXT_PUBLIC_INTERNATIONAL_API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fileName: data.file_name_2,
-          weeklyChargesBand: data.exactWeeklyBandRange,
-        }),
-      }),
-    ]);
-
-    const responseJson = await Promise.all(
-      responses.map((response) => response.json())
-    );
-
-    console.log(responseJson);
-
-    let finalData = {};
-
-    responseJson.forEach((response) => {
+    data.forEach((response) => {
       if (response.detail) {
         finalData = null;
       } else {

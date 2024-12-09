@@ -44,7 +44,7 @@ export default function IntroPage() {
     data.append("file", formData.pdf);
     data.append("weeklyChargesBand", `${formData.weeklyCharges}`);
 
-    fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/upload-file`, {
+    fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}`, {
       method: "POST",
       body: data,
     })
