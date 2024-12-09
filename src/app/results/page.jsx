@@ -61,7 +61,7 @@ function DiscountRow({ service, isActive, onToggle }) {
                   service.discount
                 )}`}
               >
-                {service.discount}{new String(service.discount).endsWith('%') ? "": new String(service.discount).includes("No") ?"":"%"}
+                ~{service.discount}{new String(service.discount).endsWith('%') ? "": new String(service.discount).includes("No") ?"":"%"}
               </span>
               <div className="w-32 h-2 bg-[#1C1C28] rounded-full overflow-hidden">
                 <div
@@ -164,192 +164,182 @@ export default function DiscountResults() {
     );
   }
 
+  //domestic res and comm
 
-//domestic res and comm
+  if (analysis.domesticGround1) {
+    const groundData1 = analysis.domesticGround1["DOMESTIC GROUND SERVICE LEVEL"];
 
-if (analysis.domesticGround1) {
-  const groundData1 = analysis.domesticGround1["DOMESTIC GROUND SERVICE LEVEL"];
+    // Get Commercial and Residential Current UPS from domesticGround1
+    let commercialCurrentUPS = 0;
+    let residentialCurrentUPS = 0;
 
-  // Get Commercial and Residential Current UPS from domesticGround1
-  let commercialCurrentUPS = 0;
-  let residentialCurrentUPS = 0;
-
-  if (groundData1["UPS® Ground - Commercial Package - Prepaid"]) {
-    commercialCurrentUPS = Number(
-      groundData1["UPS® Ground - Commercial Package - Prepaid"]["Current UPS"]?.replace("%", "")
-    ) || 0;
-  }
-
-  if (groundData1["UPS® Ground - Residential Package - Prepaid"]) {
-    residentialCurrentUPS = Number(
-      groundData1["UPS® Ground - Residential Package - Prepaid"]["Current UPS"]?.replace("%", "")
-    ) || 0;
-  }
-
-  // Process domesticGround2 to add incentives
-  if (analysis.domesticGround2 && analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"]) {
-    const groundData2 = analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"];
-
-    const commercialIncentivesKey = "UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates";
-    const residentialIncentivesKey = "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates";
-
-    // Collect all incentives to find the minimum non-null incentive
-    let allIncentives = [];
-
-    [commercialIncentivesKey, residentialIncentivesKey].forEach((key) => {
-      if (groundData2[key]) {
-        const incentiveData = groundData2[key];
-        Object.values(incentiveData).forEach((value) => {
-          if (typeof value === "string" && value.endsWith("%")) {
-            const val = parseFloat(value.replace("%", ""));
-            if (!isNaN(val)) {
-              allIncentives.push(val);
-            }
-          }
-        });
-      }
-    });
-
-    // If no non-null incentives found, fallback to a known minimum (e.g., 53)
-    const minIncentive = allIncentives.length > 0 ? Math.min(...allIncentives) : 53;
-
-    // Commercial weight ranges
-    if (groundData2[commercialIncentivesKey]) {
-      const commercialIncentives = groundData2[commercialIncentivesKey];
-      Object.keys(commercialIncentives).forEach((weightRange) => {
-        const incStr = commercialIncentives[weightRange];
-        let incentiveVal = minIncentive;
-        if (incStr && incStr.endsWith("%")) {
-          incentiveVal = parseFloat(incStr.replace("%", "")) || minIncentive;
-        }
-        const total = commercialCurrentUPS + incentiveVal; 
-        domesticGroundServiceLevels.push({
-          name: "UPS® Ground - Commercial Package - Prepaid",
-          weightRange: weightRange,
-          discount: total,
-        });
-      });
+    if (groundData1["UPS® Ground - Commercial Package - Prepaid"]) {
+      commercialCurrentUPS = Number(
+        groundData1["UPS® Ground - Commercial Package - Prepaid"]["Current UPS"]?.replace("%", "")
+      ) || 0;
     }
 
-    // Residential weight ranges
-    if (groundData2[residentialIncentivesKey]) {
-      const residentialIncentives = groundData2[residentialIncentivesKey];
-      Object.keys(residentialIncentives).forEach((weightRange) => {
-        const incStr = residentialIncentives[weightRange];
-        let incentiveVal = minIncentive;
-        if (incStr && incStr.endsWith("%")) {
-          incentiveVal = parseFloat(incStr.replace("%", "")) || minIncentive;
-        }
-        const total = residentialCurrentUPS + incentiveVal;
-        domesticGroundServiceLevels.push({
-          name: "UPS® Ground - Residential Package - Prepaid",
-          weightRange: weightRange,
-          discount: total,
-        });
-      });
+    if (groundData1["UPS® Ground - Residential Package - Prepaid"]) {
+      residentialCurrentUPS = Number(
+        groundData1["UPS® Ground - Residential Package - Prepaid"]["Current UPS"]?.replace("%", "")
+      ) || 0;
     }
-  }
 
-  // Display domesticGround3 as is
-  if (
-    analysis.domesticGround3 && 
-    analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"] &&
-    analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"]
-  ) {
-    const cwtData = analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"];
-    const cwtDiscount = Number(cwtData["Discount"]?.replace("%","") || cwtData["Current UPS"]?.replace("%", "")) || 0;
-    domesticGroundServiceLevels.push({
-      name: "Ground CWT",
-      weightRange: cwtData["Weight Range"] || "All",
-      discount: cwtDiscount,
-    });
-  }
-}
+    // Process domesticGround2 to add incentives
+    if (analysis.domesticGround2 && analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"]) {
+      const groundData2 = analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"];
 
+      const commercialIncentivesKey = "UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates";
+      const residentialIncentivesKey = "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates";
 
+      // Collect all incentives to find the minimum non-null incentive
+      let allIncentives = [];
 
-
-
-// Process international data
-if (analysis.response5) {
-  const internationalData = analysis.response5["INTERNATIONAL SERVICE LEVEL"];
-
-  const processDirection = (direction) => {
-    const directionData = internationalData[direction];
-
-    // Gather all non-null incentives for this direction
-    const incentivesArray = [];
-    Object.keys(directionData).forEach((service) => {
-      const data = directionData[service];
-      ["Letter", "Document", "Pak", "Package"].forEach((type) => {
-        if (data[type]) {
-          const incentiveStr = data[type]["Incentives Off Effective Rates"];
-          if (incentiveStr && incentiveStr.endsWith("%")) {
-            const incentiveVal = parseFloat(incentiveStr.replace("%", ""));
-            if (!isNaN(incentiveVal)) {
-              incentivesArray.push(incentiveVal);
+      [commercialIncentivesKey, residentialIncentivesKey].forEach((key) => {
+        if (groundData2[key]) {
+          const incentiveData = groundData2[key];
+          Object.values(incentiveData).forEach((value) => {
+            if (typeof value === "string" && value.endsWith("%")) {
+              const val = parseFloat(value.replace("%", ""));
+              if (!isNaN(val)) {
+                allIncentives.push(val);
+              }
             }
-          }
-        }
-      });
-    });
-
-    // Find the minimum non-null incentive, default to 0 if none found
-    const minIncentive = incentivesArray.length > 0 
-      ? Math.min(...incentivesArray) 
-      : 0;
-
-    // Now process each service and type to sum Current UPS and incentive
-    Object.keys(directionData).forEach((service) => {
-      const data = directionData[service];
-
-      ["Letter", "Document", "Pak", "Package"].forEach((type) => {
-        if (data[type]) {
-          const currentUPSStr = data[type]["Current UPS"];
-          const incentiveStr = data[type]["Incentives Off Effective Rates"];
-
-          // Parse Current UPS
-          let currentUPSVal = 0;
-          if (currentUPSStr && currentUPSStr.endsWith("%")) {
-            currentUPSVal = parseFloat(currentUPSStr.replace("%", ""));
-          }
-
-          // Parse Incentive or use min if null
-          let incentiveVal = minIncentive;
-          if (incentiveStr && incentiveStr.endsWith("%")) {
-            const parsedIncentive = parseFloat(incentiveStr.replace("%", ""));
-            if (!isNaN(parsedIncentive)) {
-              incentiveVal = parsedIncentive;
-            }
-          }
-
-          // Sum them
-          const total = currentUPSVal + incentiveVal;
-          const formattedTotal = isNaN(total) ? "No Discount" : `${total.toFixed(2)}%`;
-
-          internationalServiceLevels.push({
-            name: `${direction} ${service} ${type}`,
-            weightRange: data[type]["Weight Range"],
-            discount: formattedTotal,
           });
         }
       });
-    });
-  };
 
-  // Process both Export and Import
-  if (internationalData["Export"]) {
-    processDirection("Export");
+      // If no non-null incentives found, fallback to a known minimum (e.g., 53)
+      const minIncentive = allIncentives.length > 0 ? Math.min(...allIncentives) : 53;
+
+      // Commercial weight ranges
+      if (groundData2[commercialIncentivesKey]) {
+        const commercialIncentives = groundData2[commercialIncentivesKey];
+        Object.keys(commercialIncentives).forEach((weightRange) => {
+          const incStr = commercialIncentives[weightRange];
+          let incentiveVal = minIncentive;
+          if (incStr && incStr.endsWith("%")) {
+            incentiveVal = parseFloat(incStr.replace("%", "")) || minIncentive;
+          }
+          const total = commercialCurrentUPS + incentiveVal; 
+          domesticGroundServiceLevels.push({
+            name: "UPS® Ground - Commercial Package - Prepaid",
+            weightRange: weightRange,
+            discount: total,
+          });
+        });
+      }
+
+      // Residential weight ranges
+      if (groundData2[residentialIncentivesKey]) {
+        const residentialIncentives = groundData2[residentialIncentivesKey];
+        Object.keys(residentialIncentives).forEach((weightRange) => {
+          const incStr = residentialIncentives[weightRange];
+          let incentiveVal = minIncentive;
+          if (incStr && incStr.endsWith("%")) {
+            incentiveVal = parseFloat(incStr.replace("%", "")) || minIncentive;
+          }
+          const total = residentialCurrentUPS + incentiveVal;
+          domesticGroundServiceLevels.push({
+            name: "UPS® Ground - Residential Package - Prepaid",
+            weightRange: weightRange,
+            discount: total,
+          });
+        });
+      }
+    }
+
+    // Display domesticGround3 as is
+    if (
+      analysis.domesticGround3 && 
+      analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"] &&
+      analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"]
+    ) {
+      const cwtData = analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"];
+      const cwtDiscount = Number(cwtData["Discount"]?.replace("%","") || cwtData["Current UPS"]?.replace("%", "")) || 0;
+      domesticGroundServiceLevels.push({
+        name: "Ground CWT",
+        weightRange: cwtData["Weight Range"] || "All",
+        discount: cwtDiscount,
+      });
+    }
   }
-  if (internationalData["Import"]) {
-    processDirection("Import");
+
+  // Process international data
+  if (analysis.response5) {
+    const internationalData = analysis.response5["INTERNATIONAL SERVICE LEVEL"];
+
+    const processDirection = (direction) => {
+      const directionData = internationalData[direction];
+
+      // Gather all non-null incentives for this direction
+      const incentivesArray = [];
+      Object.keys(directionData).forEach((service) => {
+        const data = directionData[service];
+        ["Letter", "Document", "Pak", "Package"].forEach((type) => {
+          if (data[type]) {
+            const incentiveStr = data[type]["Incentives Off Effective Rates"];
+            if (incentiveStr && incentiveStr.endsWith("%")) {
+              const incentiveVal = parseFloat(incentiveStr.replace("%", ""));
+              if (!isNaN(incentiveVal)) {
+                incentivesArray.push(incentiveVal);
+              }
+            }
+          }
+        });
+      });
+
+      // Find the minimum non-null incentive, default to 0 if none found
+      const minIncentive = incentivesArray.length > 0 
+        ? Math.min(...incentivesArray) 
+        : 0;
+
+      // Now process each service and type to sum Current UPS and incentive
+      Object.keys(directionData).forEach((service) => {
+        const data = directionData[service];
+
+        ["Letter", "Document", "Pak", "Package"].forEach((type) => {
+          if (data[type]) {
+            const currentUPSStr = data[type]["Current UPS"];
+            const incentiveStr = data[type]["Incentives Off Effective Rates"];
+
+            // Parse Current UPS
+            let currentUPSVal = 0;
+            if (currentUPSStr && currentUPSStr.endsWith("%")) {
+              currentUPSVal = parseFloat(currentUPSStr.replace("%", ""));
+            }
+
+            // Parse Incentive or use min if null
+            let incentiveVal = minIncentive;
+            if (incentiveStr && incentiveStr.endsWith("%")) {
+              const parsedIncentive = parseFloat(incentiveStr.replace("%", ""));
+              if (!isNaN(parsedIncentive)) {
+                incentiveVal = parsedIncentive;
+              }
+            }
+
+            // Sum them
+            const total = currentUPSVal + incentiveVal;
+            const formattedTotal = isNaN(total) ? "No Discount" : `${total.toFixed(2)}%`;
+
+            internationalServiceLevels.push({
+              name: `${direction} ${service} ${type}`,
+              weightRange: data[type]["Weight Range"],
+              discount: formattedTotal,
+            });
+          }
+        });
+      });
+    };
+
+    // Process both Export and Import
+    if (internationalData["Export"]) {
+      processDirection("Export");
+    }
+    if (internationalData["Import"]) {
+      processDirection("Import");
+    }
   }
-}
-
- 
-
-    
-
 
   // Process accessorial charges
   if (analysis.accesorials) {
@@ -402,7 +392,7 @@ if (analysis.response5) {
                   ))}
 
                   <p className="text-2xl font-bold text-white text-center">
-                    Domestic Ground Service Levels
+                    Domestic Ground Service Levels (Coming Soon)
                   </p>
                   {domesticGroundServiceLevels.map((service, index) => (
                     <DiscountRow
