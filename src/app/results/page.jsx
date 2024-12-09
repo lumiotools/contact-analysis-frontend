@@ -181,33 +181,38 @@ export default function DiscountResults() {
     });
   }
 
-  // Process international data
-  if (analysis.international1) {
-    Object.keys(
-      analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"]
-    ).forEach((service) => {
-      const exportData =
-        analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"][
-          service
-        ];
-      if (exportData.Letter) {
-        internationalServiceLevels.push({
-          name: `Export ${service} Letter`,
-          weightRange: exportData.Letter["Weight Range"],
-          discount:
-            Number(exportData.Letter["Current UPS"]?.replace("%", "")) || 0,
-        });
-      }
-      if (exportData.Package) {
-        internationalServiceLevels.push({
-          name: `Export ${service} Package`,
-          weightRange: exportData.Package["Weight Range"],
-          discount:
-            Number(exportData.Package["Current UPS"]?.replace("%", "")) || 0,
-        });
-      }
-    });
-  }
+// Process international data
+if (analysis.international1) {
+  Object.keys(
+    analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"]
+  ).forEach((service) => {
+    const exportData =
+      analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"][
+        service
+      ];
+    if (exportData.Letter) {
+      internationalServiceLevels.push({
+        name: `Export ${service} Letter`,
+        weightRange: exportData.Letter["Weight Range"],
+        discount:
+          (exportData.Letter["Current UPS"] ?? "No Discount") +
+          (exportData.Letter["Incentives Off Effective Rates"] ? 
+            ` + ${exportData.Letter["Incentives Off Effective Rates"]}` : "")
+      });
+    }
+    if (exportData.Package) {
+      internationalServiceLevels.push({
+        name: `Export ${service} Package`,
+        weightRange: exportData.Package["Weight Range"],
+        discount:
+          (exportData.Package["Current UPS"] ?? "No Discount") +
+          (exportData.Package["Incentives Off Effective Rates"] ? 
+            ` + ${exportData.Package["Incentives Off Effective Rates"]}` : "")
+      });
+    }
+  });
+}
+
 
   // Process accessorial charges
   if (analysis.accesorials) {
