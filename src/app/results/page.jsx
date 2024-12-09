@@ -183,67 +183,83 @@ export default function DiscountResults() {
 
 // Process international data
 if (analysis.response5) {
-  const exportDataSection = analysis.response5["INTERNATIONAL SERVICE LEVEL"]["Export"];
+  const internationalData = analysis.response5["INTERNATIONAL SERVICE LEVEL"];
 
-  // Gather all non-null incentives to find the minimum incentive
-  const incentivesArray = [];
+  const processDirection = (direction) => {
+    const directionData = internationalData[direction];
 
-  Object.keys(exportDataSection).forEach((service) => {
-    const exportData = exportDataSection[service];
-    ["Letter", "Document", "Pak", "Package"].forEach((type) => {
-      if (exportData[type]) {
-        const incentiveStr = exportData[type]["Incentives Off Effective Rates"];
-        if (incentiveStr && incentiveStr.endsWith("%")) {
-          const incentiveVal = parseFloat(incentiveStr.replace("%", ""));
-          if (!isNaN(incentiveVal)) {
-            incentivesArray.push(incentiveVal);
+    // Gather all non-null incentives for this direction
+    const incentivesArray = [];
+    Object.keys(directionData).forEach((service) => {
+      const data = directionData[service];
+      ["Letter", "Document", "Pak", "Package"].forEach((type) => {
+        if (data[type]) {
+          const incentiveStr = data[type]["Incentives Off Effective Rates"];
+          if (incentiveStr && incentiveStr.endsWith("%")) {
+            const incentiveVal = parseFloat(incentiveStr.replace("%", ""));
+            if (!isNaN(incentiveVal)) {
+              incentivesArray.push(incentiveVal);
+            }
           }
         }
-      }
+      });
     });
-  });
 
-  // Find the minimum non-null incentive if any exist, otherwise default to 0
-  const minIncentive = incentivesArray.length > 0 
-    ? Math.min(...incentivesArray) 
-    : 0;
+    // Find the minimum non-null incentive, default to 0 if none found
+    const minIncentive = incentivesArray.length > 0 
+      ? Math.min(...incentivesArray) 
+      : 0;
 
-  Object.keys(exportDataSection).forEach((service) => {
-    const exportData = exportDataSection[service];
+    // Now process each service and type to sum Current UPS and incentive
+    Object.keys(directionData).forEach((service) => {
+      const data = directionData[service];
 
-    ["Letter", "Document", "Pak", "Package"].forEach((type) => {
-      if (exportData[type]) {
-        const currentUPSStr = exportData[type]["Current UPS"];
-        const incentiveStr = exportData[type]["Incentives Off Effective Rates"];
+      ["Letter", "Document", "Pak", "Package"].forEach((type) => {
+        if (data[type]) {
+          const currentUPSStr = data[type]["Current UPS"];
+          const incentiveStr = data[type]["Incentives Off Effective Rates"];
 
-        // Parse Current UPS
-        let currentUPSVal = 0;
-        if (currentUPSStr && currentUPSStr.endsWith("%")) {
-          currentUPSVal = parseFloat(currentUPSStr.replace("%", ""));
+          // Parse Current UPS
+          let currentUPSVal = 0;
+          if (currentUPSStr && currentUPSStr.endsWith("%")) {
+            currentUPSVal = parseFloat(currentUPSStr.replace("%", ""));
+          }
+
+          // Parse Incentive or use min if null
+          let incentiveVal = minIncentive;
+          if (incentiveStr && incentiveStr.endsWith("%")) {
+            const parsedIncentive = parseFloat(incentiveStr.replace("%", ""));
+            if (!isNaN(parsedIncentive)) {
+              incentiveVal = parsedIncentive;
+            }
+          }
+
+          // Sum them
+          const total = currentUPSVal + incentiveVal;
+          const formattedTotal = isNaN(total) ? "No Discount" : `${total.toFixed(2)}%`;
+
+          internationalServiceLevels.push({
+            name: `${direction} ${service} ${type}`,
+            weightRange: data[type]["Weight Range"],
+            discount: formattedTotal,
+          });
         }
-
-        // Parse Incentive or use min if null
-        let incentiveVal = minIncentive;
-        if (incentiveStr !== null && incentiveStr !== undefined && incentiveStr.endsWith("%")) {
-          incentiveVal = parseFloat(incentiveStr.replace("%", ""));
-        }
-
-        // Sum them
-        const total = currentUPSVal + incentiveVal;
-        const formattedTotal = isNaN(total) ? "No Discount" : `${total.toFixed(2)}%`;
-
-        internationalServiceLevels.push({
-          name: `Export ${service} ${type}`,
-          weightRange: exportData[type]["Weight Range"],
-          discount: formattedTotal,
-        });
-      }
+      });
     });
-  });
+  };
+
+  // Process both Export and Import
+  if (internationalData["Export"]) {
+    processDirection("Export");
+  }
+  if (internationalData["Import"]) {
+    processDirection("Import");
+  }
 }
 
+ 
 
-
+    
 
 
   // Process accessorial charges
