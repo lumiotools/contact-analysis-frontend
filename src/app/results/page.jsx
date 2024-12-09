@@ -184,10 +184,10 @@ export default function DiscountResults() {
 // Process international data
 if (analysis.response5) {
   Object.keys(
-    analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"]
+    analysis.response5["INTERNATIONAL SERVICE LEVEL"]["Export"]
   ).forEach((service) => {
     const exportData =
-      analysis.international1["INTERNATIONAL SERVICE LEVEL"]["Export"][
+      analysis.response5["INTERNATIONAL SERVICE LEVEL"]["Export"][
         service
       ];
     if (exportData.Letter) {
