@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SavingsMetrics from "@/components/SavingsMetrics";
-import { LoadingAnimation } from "@/components/loading-animation";
+import { combineData } from "@/utils/combineData";
 
 function DiscountRow({ service, isActive, onToggle }) {
   const getDiscountColor = (discount) => {
@@ -96,6 +96,7 @@ export default function DiscountResults() {
   const [activeRowIndex, setActiveRowIndex] = useState(null);
   const [loading, setLoading] = useState(true);
   const [analysis, setAnalysis] = useState({});
+  const [graphData, setGraphData] = useState([])
 
   const handleRowToggle = (index) => {
     setActiveRowIndex(activeRowIndex === index ? null : index);
@@ -103,13 +104,15 @@ export default function DiscountResults() {
 
   const fetchData = async () => {
     let data = window.localStorage.getItem("data");
-
-    if (!data) {
+    let graphData=localStorage.getItem("graphData");
+    if (!data || !graphData) {
       navigate.replace("/");
       return;
     }
 
     data = JSON.parse(data);
+    const gData=JSON.parse(graphData);
+    setGraphData(gData);
     let finalData = {};
 
     if(!Array.isArray(data)){
@@ -353,10 +356,9 @@ export default function DiscountResults() {
     });
   }
 
-  // if (loading) {
-  //   return <LoadingAnimation />;
-  // }
-
+  console.log("analysis",analysis);
+  console.log("analysis graph",graphData);
+  console.log("com",combineData(analysis,graphData));
   return (
     <div className="h-screen bg-[#1C1C28] flex items-center justify-center w-full">
       <div className="w-full h-full max-w-[1800px] mx-auto">

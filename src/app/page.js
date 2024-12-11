@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   ArrowUpRight,
@@ -22,6 +22,8 @@ import { Label } from "recharts";
 import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
 import { LoadingAnimation } from "@/components/loading-animation";
+import axios from "axios"
+import { parseJson } from "@/utils/parseJson";
 
 export default function IntroPage() {
   const navigate = useRouter();
@@ -32,43 +34,44 @@ export default function IntroPage() {
 
   const [uploadingLoading, setUploadLoading] = useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
+  const [targetSpend, setTargetSpend] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.pdf || !formData.weeklyCharges) {
+    if (!formData.pdf || !formData.weeklyCharges || !targetSpend) {
       return;
     }
     setUploadLoading(true);
 
-    // Create a FormData object
-    const data = new FormData();
-    data.append("file", formData.pdf);
-    data.append("weeklyChargesBand", `${formData.weeklyCharges}`);
+    try {
+      // Create a FormData object
+      const data = new FormData();
+      data.append("file", formData.pdf);
+      data.append("weeklyChargesBand", `${formData.weeklyCharges}`);
 
-    fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}`, {
-      method: "POST",
-      body: data,
-    })
-      .then((response) => {
-        if (
-          response.headers.get("content-type")?.includes("application/json")
-        ) {
-          return response.json();
-        } else {
-          throw new Error("Invalid JSON response");
-        }
-      })
-      .then((data) => {
-        console.log("Success:", data);
-        localStorage.setItem("data", JSON.stringify(data));
+
+      const graphApiBody=
+      {
+        target_spend:targetSpend,
+        carrier: "UPS",
+        tolerance: 0.2,
+        top_n: 100
+      }
+        const {data:graphResponse} = await axios.post(process.env.NEXT_PUBLIC_GRAPH_SERVER_URL,
+          graphApiBody
+        )
+        const graphApiJsonResponse=JSON.parse(parseJson(graphResponse))
+        console.log("graph",graphApiJsonResponse)
+        localStorage.setItem("graphData", JSON.stringify(graphApiJsonResponse));
+        const {data:discountApiResponse}=await axios.post(process.env.NEXT_PUBLIC_SERVER_URL,data);
+        localStorage.setItem("data", JSON.stringify(discountApiResponse));
         navigate.push("/results");
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      })
-      .finally(() => {
         setUploadLoading(false);
-      });
+  
+        } catch (error) {
+      console.log(error);
+      setUploadLoading(false);
+    }
   };
 
   const handleFileChange = (e) => {
@@ -78,6 +81,12 @@ export default function IntroPage() {
       setIsUploaded(true);
     }
   };
+
+  useEffect(()=>{
+    (async()=>{
+  
+    })()
+  },[])
 
   const benefits = [
     {
@@ -390,32 +399,27 @@ export default function IntroPage() {
                               </div>
                             </div>
 
-                            {/* <div className="space-y-4">
-                          <Label
-                            htmlFor="zone"
-                            className="text-base text-gray-300 block"
-                          >
-                            Zone/Place
-                          </Label>
-                          <div className="relative">
-                            <MapPin
-                              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5"
-                            />
+                            <div className="space-y-4">
+                              <Label
+                                htmlFor="zone"
+                                className="text-base text-gray-300 block"
+                              >
+                                Target Spend
+                              </Label>
+                              <div className="relative">
+                                <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
 
-                            <Input
-                              type="text"
-                              placeholder="Enter zone"
-                              value={formData.zone}
-                              onChange={(e) =>
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  zone: e.target.value,
-                                }))
-                              }
-                              className="pl-10 h-12 bg-[#2A2A36] border-gray-600 text-white placeholder:text-gray-500 rounded-xl"
-                            />
-                          </div>
-                        </div> */}
+                                <Input
+                                  type="text"
+                                  placeholder="Enter Target Spend"
+                                  value={targetSpend}
+                                  onChange={(e) =>
+                                    setTargetSpend(e.target.value)
+                                  }
+                                  className="pl-10 h-12 bg-[#2A2A36] border-gray-600 text-white placeholder:text-gray-500 rounded-xl"
+                                />
+                              </div>
+                            </div>
                           </div>
                         </div>
 
