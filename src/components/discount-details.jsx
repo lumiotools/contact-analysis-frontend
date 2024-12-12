@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { Badge } from "@/components/ui/badge";
@@ -12,28 +12,6 @@ import {
   Cell,
   ResponsiveContainer,
 } from "recharts";
-
-const data = [
-  { discount: "0%", count: 2, value: 0 },
-  { discount: "10%", count: 1, value: 10 },
-  { discount: "20%", count: 6, value: 20 },
-  { discount: "30%", count: 3, value: 30 },
-  { discount: "40%", count: 2, value: 40 },
-  { discount: "50%", count: 4, value: 50 },
-  { discount: "60%", count: 4, value: 60 },
-  { discount: "70%", count: 5, value: 70 },
-  { discount: "80%", count: 3, value: 80 },
-  { discount: "90%", count: 2, value: 90 },
-  { discount: "100%", count: 3, value: 100 },
-];
-
-const topDiscounts = [
-  { discount: 80, rank: "1st" },
-  { discount: 70, rank: "2nd" },
-  { discount: 60, rank: "3rd" },
-  { discount: 50, rank: "4th" },
-  { discount: 40, rank: "5th" },
-];
 
 const getBarColor = (value, currentDiscount) => {
   if (value === currentDiscount) {
@@ -62,27 +40,90 @@ const getColorByValue = (value) => {
   return `hsla(${hue}, 80%, 40%, 1)`;
 };
 
-export default function DiscountDetails({ currentDiscount = 40 }) {
-  const benchmarkDiscount = 65;
+export default function DiscountDistributionAnalysis({
+  currentDiscount = 40,
+  serviceName,
+}) {
+  const [barData, setBarData] = useState([]);
+  const [topDiscounts, setTopDiscounts] = useState([]);
+
+  useEffect(() => {
+    const graphDataString = localStorage.getItem("graphData");
+    if (!graphDataString) return;
+
+    try {
+      const graphData = JSON.parse(graphDataString);
+
+      const serviceData = graphData.find((item) =>
+        item["Service Level"].includes(serviceName)
+      );
+
+      if (serviceData && serviceData["Discount Values"]) {
+        const processedData = serviceData["Discount Values"].map((value) => ({
+          value: value,
+          count: 1,
+          discount: `${value}%`,
+        }));
+
+        const sortedData = processedData.sort((a, b) => a.value - b.value);
+        setBarData(sortedData);
+
+        const sortedDiscounts = [...sortedData]
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 5)
+          .map((item, index) => ({
+            discount: item.value,
+            rank:
+              index === 0
+                ? "1st"
+                : index === 1
+                ? "2nd"
+                : index === 2
+                ? "3rd"
+                : `${index + 1}th`,
+          }));
+
+        setTopDiscounts(sortedDiscounts);
+      }
+    } catch (error) {
+      console.error("Error processing graph data:", error);
+    }
+  }, [serviceName]);
+
+  // If no data is available, return null or a placeholder
+  if (barData.length === 0) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 p-4 lg:p-6 bg-[#23232F]">
+        <div className="col-span-1 lg:col-span-2">
+          <Card className="bg-[#2A2A36] border-none h-full">
+            <CardHeader>
+              <CardTitle className="text-lg md:text-xl font-semibold text-white">
+                Discount Distribution Analysis
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-center justify-center h-[300px]">
+              <p className="text-gray-400">No discount data available</p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div
-      className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 p-4 lg:p-6 bg-[#23232F] animate-in slide-in-from-top duration-200"
-    >
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 p-4 lg:p-6 bg-[#23232F]">
       <div className="col-span-1 lg:col-span-2">
         <Card className="bg-[#2A2A36] border-none h-full">
           <CardHeader>
-            <CardTitle
-              className="text-lg md:text-xl font-semibold text-white"
-            >
-              Discount Distribution Analysis  <span className="bg-green-500/50 py-1  px-2 rounded-full"> {"("}Coming Soon{")"}</span>
+            <CardTitle className="text-lg md:text-xl font-semibold text-white">
+              Discount Distribution Analysis
             </CardTitle>
           </CardHeader>
           <CardContent className="p-2 md:p-4">
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
-                  data={data}
+                  data={barData}
                   margin={{
                     top: 30,
                     right: 10,
@@ -91,12 +132,9 @@ export default function DiscountDetails({ currentDiscount = 40 }) {
                   }}
                   barSize={20}
                 >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    vertical={false}
-                  />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis
-                    dataKey="value"
+                    dataKey="discount"
                     stroke="hsl(var(--muted-foreground))"
                     domain={[0, 100]}
                     ticks={[0, 20, 40, 60, 80, 100]}
@@ -105,8 +143,11 @@ export default function DiscountDetails({ currentDiscount = 40 }) {
                   />
 
                   <YAxis
-                    tickFormatter={(value) => value}
+                    type="number"
+                    domain={[0, 100]}
                     stroke="hsl(var(--muted-foreground))"
+                    ticks={[0, 20, 40, 60, 80, 100]}
+                    tickFormatter={(value) => `${value}%`}
                     fontSize={12}
                   />
 
@@ -124,32 +165,18 @@ export default function DiscountDetails({ currentDiscount = 40 }) {
                         >
                           <div className="grid grid-cols-2 gap-2">
                             <div className="flex flex-col">
-                              <span
-                                className="text-[0.70rem] uppercase text-muted-foreground"
-                              >
+                              <span className="text-[0.70rem] uppercase text-muted-foreground">
                                 Discount
                               </span>
                               <span
                                 className={`font-bold ${
-                                  isCurrentDiscount 
+                                  isCurrentDiscount
                                     ? "text-white"
                                     : "text-muted-foreground"
                                 }`}
                               >
                                 {data.discount}
                                 {isCurrentDiscount && " (Current)"}
-                              </span>
-                            </div>
-                            <div className="flex flex-col">
-                              <span
-                                className="text-[0.70rem] uppercase text-muted-foreground"
-                              >
-                                Companies
-                              </span>
-                              <span
-                                className="font-bold text-white"
-                              >
-                                {data.count}
                               </span>
                             </div>
                           </div>
@@ -159,7 +186,7 @@ export default function DiscountDetails({ currentDiscount = 40 }) {
                   />
 
                   <ReferenceLine
-                    x={40}
+                    x={currentDiscount}
                     stroke="white"
                     strokeWidth={2}
                     label={{
@@ -170,30 +197,14 @@ export default function DiscountDetails({ currentDiscount = 40 }) {
                     }}
                   />
 
-                  <ReferenceLine
-                    y={benchmarkDiscount}
-                    stroke="hsl(var(--success))"
-                    strokeDasharray="3 3"
-                    label={{
-                      value: "Benchmark (65%)",
-                      position: "right",
-                      fill: "hsl(var(--success))",
-                      fontSize: 12,
-                    }}
-                  />
-
-                  <Bar
-                    dataKey="count"
-                    radius={[4, 4, 0, 0]}
-                    barSize={15}
-                  >
-                    {data.map((entry, index) => (
+                  <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={15}>
+                    {barData.map((entry, index) => (
                       <Cell
                         key={`cell-${entry.value}`}
-                        fill={getBarColor(entry.value, 40)}
+                        fill={getBarColor(entry.value, currentDiscount)}
                         className={getBarClassName(
                           entry.value,
-                          40,
+                          currentDiscount
                         )}
                         id={`02m01t_${index}`}
                       />
@@ -209,9 +220,7 @@ export default function DiscountDetails({ currentDiscount = 40 }) {
       <div className="col-span-1">
         <Card className="bg-[#2A2A36] border-none h-full">
           <CardHeader>
-            <CardTitle
-              className="text-lg md:text-xl font-semibold text-white"
-            >
+            <CardTitle className="text-lg md:text-xl font-semibold text-white">
               Top Discounts
             </CardTitle>
           </CardHeader>
@@ -221,7 +230,7 @@ export default function DiscountDetails({ currentDiscount = 40 }) {
                 <div
                   key={index}
                   className={`flex items-center justify-between p-3 rounded-lg bg-[#23232F] ${
-                    item.discount === 50
+                    item.discount === currentDiscount
                       ? "ring-2 ring-white/20"
                       : ""
                   }`}
