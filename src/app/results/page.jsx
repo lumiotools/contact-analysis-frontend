@@ -1,14 +1,9 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NegotiationChatbot } from "@/components/negotiation-chatbot";
 import DiscountDetails from "@/components/discount-details";
-import {
-  ArrowLeft,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SavingsMetrics from "@/components/SavingsMetrics";
 import { combineData } from "@/utils/combineData";
@@ -62,14 +57,25 @@ function DiscountRow({ service, isActive, onToggle }) {
                   service.discount
                 )}`}
               >
-                ~ {service.discount}{new String(service.discount).endsWith('%') ? "" : new String(service.discount).includes("No") ?"":"%"}
+                ~ {service.discount}
+                {new String(service.discount).endsWith("%")
+                  ? ""
+                  : new String(service.discount).includes("No")
+                  ? ""
+                  : "%"}
               </span>
               <div className="w-32 h-2 bg-[#1C1C28] rounded-full overflow-hidden">
                 <div
                   className={`h-full ${getProgressColor(
                     service.discount
                   )} transition-all duration-500 ease-in-out`}
-                  style={{ width: `${new String(service.discount).endsWith('%') ? service.discount:`${service.discount}%` }` }}
+                  style={{
+                    width: `${
+                      new String(service.discount).endsWith("%")
+                        ? service.discount
+                        : `${service.discount}%`
+                    }`,
+                  }}
                 />
               </div>
             </div>
@@ -84,7 +90,10 @@ function DiscountRow({ service, isActive, onToggle }) {
 
       {isActive && (
         <div className="p-6 bg-[#23232F] space-y-4 animate-in slide-in-from-top duration-200">
-          <DiscountDetails currentDiscount={service.discount} />
+          <DiscountDetails
+            currentDiscount={service.discount}
+            serviceName={service.name}
+          />
         </div>
       )}
     </div>
@@ -96,7 +105,7 @@ export default function DiscountResults() {
   const [activeRowIndex, setActiveRowIndex] = useState(null);
   const [loading, setLoading] = useState(true);
   const [analysis, setAnalysis] = useState({});
-  const [graphData, setGraphData] = useState([])
+  const [graphData, setGraphData] = useState([]);
 
   const handleRowToggle = (index) => {
     setActiveRowIndex(activeRowIndex === index ? null : index);
@@ -104,18 +113,18 @@ export default function DiscountResults() {
 
   const fetchData = async () => {
     let data = window.localStorage.getItem("data");
-    let graphData=localStorage.getItem("graphData");
+    let graphData = localStorage.getItem("graphData");
     if (!data || !graphData) {
       navigate.replace("/");
       return;
     }
 
     data = JSON.parse(data);
-    const gData=JSON.parse(graphData);
+    const gData = JSON.parse(graphData);
     setGraphData(gData);
     let finalData = {};
 
-    if(!Array.isArray(data)){
+    if (!Array.isArray(data)) {
       setLoading(false);
       return;
     }
@@ -133,7 +142,7 @@ export default function DiscountResults() {
   useEffect(() => {
     setLoading(true);
     // setTimeout(() => {
-      fetchData();
+    fetchData();
     // }, 2000);
   }, []);
 
@@ -171,30 +180,43 @@ export default function DiscountResults() {
   //domestic res and comm
 
   if (analysis.domesticGround1) {
-    const groundData1 = analysis.domesticGround1["DOMESTIC GROUND SERVICE LEVEL"];
+    const groundData1 =
+      analysis.domesticGround1["DOMESTIC GROUND SERVICE LEVEL"];
 
     // Get Commercial and Residential Current UPS from domesticGround1
     let commercialCurrentUPS = 0;
     let residentialCurrentUPS = 0;
 
     if (groundData1["UPS® Ground - Commercial Package - Prepaid"]) {
-      commercialCurrentUPS = Number(
-        groundData1["UPS® Ground - Commercial Package - Prepaid"]["Current UPS"]?.replace("%", "")
-      ) || 0;
+      commercialCurrentUPS =
+        Number(
+          groundData1["UPS® Ground - Commercial Package - Prepaid"][
+            "Current UPS"
+          ]?.replace("%", "")
+        ) || 0;
     }
 
     if (groundData1["UPS® Ground - Residential Package - Prepaid"]) {
-      residentialCurrentUPS = Number(
-        groundData1["UPS® Ground - Residential Package - Prepaid"]["Current UPS"]?.replace("%", "")
-      ) || 0;
+      residentialCurrentUPS =
+        Number(
+          groundData1["UPS® Ground - Residential Package - Prepaid"][
+            "Current UPS"
+          ]?.replace("%", "")
+        ) || 0;
     }
 
     // Process domesticGround2 to add incentives
-    if (analysis.domesticGround2 && analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"]) {
-      const groundData2 = analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"];
+    if (
+      analysis.domesticGround2 &&
+      analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"]
+    ) {
+      const groundData2 =
+        analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"];
 
-      const commercialIncentivesKey = "UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates";
-      const residentialIncentivesKey = "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates";
+      const commercialIncentivesKey =
+        "UPS® Ground - Commercial Package - Prepaid - Incentives Off Effective Rates";
+      const residentialIncentivesKey =
+        "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates";
 
       // Collect all incentives to find the minimum non-null incentive
       let allIncentives = [];
@@ -214,7 +236,8 @@ export default function DiscountResults() {
       });
 
       // If no non-null incentives found, fallback to a known minimum (e.g., 53)
-      const minIncentive = allIncentives.length > 0 ? Math.min(...allIncentives) : 53;
+      const minIncentive =
+        allIncentives.length > 0 ? Math.min(...allIncentives) : 53;
 
       // Commercial weight ranges
       if (groundData2[commercialIncentivesKey]) {
@@ -225,7 +248,7 @@ export default function DiscountResults() {
           if (incStr && incStr.endsWith("%")) {
             incentiveVal = parseFloat(incStr.replace("%", "")) || minIncentive;
           }
-          const total = commercialCurrentUPS + incentiveVal; 
+          const total = commercialCurrentUPS + incentiveVal;
           domesticGroundServiceLevels.push({
             name: "UPS® Ground - Commercial Package - Prepaid",
             weightRange: weightRange,
@@ -255,12 +278,17 @@ export default function DiscountResults() {
 
     // Display domesticGround3 as is
     if (
-      analysis.domesticGround3 && 
+      analysis.domesticGround3 &&
       analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"] &&
       analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"]
     ) {
-      const cwtData = analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"];
-      const cwtDiscount = Number(cwtData["Discount"]?.replace("%","") || cwtData["Current UPS"]?.replace("%", "")) || 0;
+      const cwtData =
+        analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"]["Ground CWT"];
+      const cwtDiscount =
+        Number(
+          cwtData["Discount"]?.replace("%", "") ||
+            cwtData["Current UPS"]?.replace("%", "")
+        ) || 0;
       domesticGroundServiceLevels.push({
         name: "Ground CWT",
         weightRange: cwtData["Weight Range"] || "All",
@@ -294,9 +322,8 @@ export default function DiscountResults() {
       });
 
       // Find the minimum non-null incentive, default to 0 if none found
-      const minIncentive = incentivesArray.length > 0 
-        ? Math.min(...incentivesArray) 
-        : 0;
+      const minIncentive =
+        incentivesArray.length > 0 ? Math.min(...incentivesArray) : 0;
 
       // Now process each service and type to sum Current UPS and incentive
       Object.keys(directionData).forEach((service) => {
@@ -324,7 +351,9 @@ export default function DiscountResults() {
 
             // Sum them
             const total = currentUPSVal + incentiveVal;
-            const formattedTotal = isNaN(total) ? "No Discount" : `${total.toFixed(2)}%`;
+            const formattedTotal = isNaN(total)
+              ? "No Discount"
+              : `${total.toFixed(2)}%`;
 
             internationalServiceLevels.push({
               name: `${direction} ${service} ${type}`,
@@ -356,9 +385,9 @@ export default function DiscountResults() {
     });
   }
 
-  console.log("analysis",analysis);
-  console.log("analysis graph",graphData);
-  console.log("com",combineData(analysis,graphData));
+  console.log("analysis", analysis);
+  console.log("analysis graph", graphData);
+  console.log("com", combineData(analysis, graphData));
   return (
     <div className="h-screen bg-[#1C1C28] flex items-center justify-center w-full">
       <div className="w-full h-full max-w-[1800px] mx-auto">
