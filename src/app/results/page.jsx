@@ -403,9 +403,9 @@ export default function DiscountResults() {
             </Button>
 
             <div className="max-w-4xl mx-auto">
-              <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">
+              {/* <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">
                 Discount Results
-              </h1>
+              </h1> */}
 
               <div className="space-y-10">
                 <SavingsMetrics />

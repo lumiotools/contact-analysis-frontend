@@ -117,7 +117,7 @@ export default function SavingsMetrics() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -141,16 +141,13 @@ export default function SavingsMetrics() {
                 animate={{ opacity: 1 }}
                 className="text-orange-400 font-bold"
               >
-                <span className="text-8xl">41</span><span className="text-5xl">ST</span>
+                <span className="text-6xl">Contract <br/> Analysis</span>
               </motion.div>
-              <div className="text-white text-xl mt-2 max-w-[240px] text-center leading-tight">
-                Percentile Compared to Contracts with Similar Spend
-              </div>
             </motion.div>
           </MainCircularProgress>
         </motion.div>
 
-        <AnimatePresence>
+        {/* <AnimatePresence>
           {showSecondary && (
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -195,7 +192,7 @@ export default function SavingsMetrics() {
               ))}
             </motion.div>
           )}
-        </AnimatePresence>
+        </AnimatePresence> */}
       </motion.div>
     </div>
   )

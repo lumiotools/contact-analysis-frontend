@@ -49,26 +49,27 @@ export default function IntroPage() {
       data.append("file", formData.pdf);
       data.append("weeklyChargesBand", `${formData.weeklyCharges}`);
 
-
-      const graphApiBody=
-      {
-        target_spend:targetSpend,
+      const graphApiBody = {
+        target_spend: targetSpend,
         carrier: "UPS",
         tolerance: 0.2,
-        top_n: 100
-      }
-        const {data:graphResponse} = await axios.post(process.env.NEXT_PUBLIC_GRAPH_SERVER_URL,
-          graphApiBody
-        )
-        const graphApiJsonResponse=JSON.parse(parseJson(graphResponse))
-        console.log("graph",graphApiJsonResponse)
-        localStorage.setItem("graphData", JSON.stringify(graphApiJsonResponse));
-        const {data:discountApiResponse}=await axios.post(process.env.NEXT_PUBLIC_SERVER_URL,data);
-        localStorage.setItem("data", JSON.stringify(discountApiResponse));
-        navigate.push("/results");
-        setUploadLoading(false);
-  
-        } catch (error) {
+        top_n: 100,
+      };
+      const { data: graphResponse } = await axios.post(
+        process.env.NEXT_PUBLIC_GRAPH_SERVER_URL,
+        graphApiBody
+      );
+      const graphApiJsonResponse = JSON.parse(parseJson(graphResponse));
+      console.log("graph", graphApiJsonResponse);
+      localStorage.setItem("graphData", JSON.stringify(graphApiJsonResponse));
+      const { data: discountApiResponse } = await axios.post(
+        process.env.NEXT_PUBLIC_SERVER_URL,
+        data
+      );
+      localStorage.setItem("data", JSON.stringify(discountApiResponse));
+      navigate.push("/results");
+      setUploadLoading(false);
+    } catch (error) {
       console.log(error);
       setUploadLoading(false);
     }
@@ -82,11 +83,9 @@ export default function IntroPage() {
     }
   };
 
-  useEffect(()=>{
-    (async()=>{
-  
-    })()
-  },[])
+  useEffect(() => {
+    (async () => {})();
+  }, []);
 
   const benefits = [
     {
@@ -163,16 +162,17 @@ export default function IntroPage() {
                   </div>
                 </div>
 
-                {/* <Button
-                  onClick={() => navigate.push("/contract-discounts")}
-                  className="bg-orange-500 hover:bg-orange-600 text-black px-12 py-7 text-lg rounded-xl font-semibold"
-                >
-                  Get Contract Discounts
-                </Button> */}
+                <div className="mt-8">
+                  <div className="flex flex-col items-center w-fit">
+                    <span className="text-gray-400 text-lg mb-2 animate-bounce">
+                      Scroll down{" "}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               {/* Right Column - Improved Visualization */}
-              <div className="relative">
+              <div className="relative flex items-center mt-10">
                 {/* Main Circle with Percentage */}
                 <div className="relative w-[500px] h-[500px] mx-auto">
                   {/* Decorative Rings */}
@@ -411,7 +411,7 @@ export default function IntroPage() {
 
                                 <Input
                                   type="text"
-                                  placeholder="Enter Target Spend"
+                                  placeholder="Enter yearly contract spend"
                                   value={targetSpend}
                                   onChange={(e) =>
                                     setTargetSpend(e.target.value)
