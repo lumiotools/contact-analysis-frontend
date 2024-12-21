@@ -211,7 +211,7 @@ export function ContractChat() {
               className={`flex gap-2 items-center px-4 rounded-xl max-w-[80%] bg-[#2A2A36] text-white`}
             >
               <LoaderCircle className="size-5 animate-spin" />
-              <p className="py-6">AI is thinking</p>
+              <p className="py-6">Searching in contract...</p>
             </div>
           )}
         </div>
