@@ -262,7 +262,7 @@ export function NegotiationChatbot() {
                 className="flex-1 h-12 bg-[#2A2A36] border-gray-600 text-white placeholder:text-gray-500 rounded-xl"
               />
               <Button
-                disabled={isLoading}
+                disabled={isLoading || !userMessage}
                 onClick={() => handleSendMessage(userMessage)}
                 className="bg-orange-500 hover:bg-orange-600 text-black text-lg font-semibold h-12 rounded-xl"
               >
