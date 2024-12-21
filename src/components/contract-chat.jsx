@@ -225,7 +225,7 @@ export function ContractChat() {
             value={userMessage}
             onChange={(e) => setUserMessage(e.target.value)}
             onKeyDown={(e) =>
-              e.key === "Enter" && handleSendMessage(userMessage)
+              e.key === "Enter" && userMessage && handleSendMessage(userMessage)
             }
             className="flex-1 h-12 bg-[#2A2A36] border-gray-600 text-white placeholder:text-gray-500 rounded-xl"
           />

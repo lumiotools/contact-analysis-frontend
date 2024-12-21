@@ -24,8 +24,7 @@ import {
 const generalQuestions = [
   {
     icon: Handshake,
-    message:
-      "What are the best strategies for negotiating a lower rate?",
+    message: "What are the best strategies for negotiating a lower rate?",
     color: "bg-orange-500/10",
     textColor: "text-orange-500",
     borderColor: "border-orange-500/20",
@@ -41,8 +40,7 @@ const generalQuestions = [
   },
   {
     icon: Scale,
-    message:
-      "What are ways to make the negotiation beneficial for both sides?",
+    message: "What are ways to make the negotiation beneficial for both sides?",
     color: "bg-blue-500/10",
     textColor: "text-blue-500",
     borderColor: "border-blue-500/20",
@@ -87,18 +85,22 @@ export function NegotiationChatbot() {
       const controller = new AbortController();
       setController(controller);
       const res = await (
-        await fetch(process.env.NEXT_PUBLIC_RATES_NEGOTIATION_CHAT_API_URL + "/rates-negotiation-chat", {
-          signal: controller.signal,
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            carrier_url: selectedCarrier,
-            message,
-            chat_history: chatHistory,
-          }),
-        })
+        await fetch(
+          process.env.NEXT_PUBLIC_RATES_NEGOTIATION_CHAT_API_URL +
+            "/rates-negotiation-chat",
+          {
+            signal: controller.signal,
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              carrier_url: selectedCarrier,
+              message,
+              chat_history: chatHistory,
+            }),
+          }
+        )
       ).json();
 
       setChatHistory([
@@ -141,7 +143,7 @@ export function NegotiationChatbot() {
   const handleResetCarrier = () => {
     setSelectedCarrier(null);
     handleResetChat();
-  }
+  };
 
   useEffect(() => {
     if (!chatContainerRef.current) return;
@@ -257,7 +259,9 @@ export function NegotiationChatbot() {
                 value={userMessage}
                 onChange={(e) => setUserMessage(e.target.value)}
                 onKeyDown={(e) =>
-                  e.key === "Enter" && handleSendMessage(userMessage)
+                  e.key === "Enter" &&
+                  userMessage &&
+                  handleSendMessage(userMessage)
                 }
                 className="flex-1 h-12 bg-[#2A2A36] border-gray-600 text-white placeholder:text-gray-500 rounded-xl"
               />
