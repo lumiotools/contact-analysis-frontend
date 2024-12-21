@@ -137,7 +137,10 @@ export function ContractChat() {
 
   useEffect(() => {
     if (!chatContainerRef.current) return;
-    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    if (chatHistory[chatHistory.length - 1]?.role === "user") {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
   }, [chatHistory]);
 
   return (
