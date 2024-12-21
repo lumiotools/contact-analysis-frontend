@@ -7,6 +7,7 @@ import { ArrowLeft, ChevronDown, ChevronUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SavingsMetrics from "@/components/SavingsMetrics";
 import { combineData } from "@/utils/combineData";
+import { ContractChat } from "@/components/contract-chat";
 
 function DiscountRow({ service, isActive, onToggle }) {
   const getDiscountColor = (discount) => {
@@ -459,6 +460,8 @@ export default function DiscountResults() {
                     />
                   ))}
                 </div>
+
+                <ContractChat/>
 
                 <NegotiationChatbot />
               </div>

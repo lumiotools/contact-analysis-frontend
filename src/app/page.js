@@ -66,7 +66,8 @@ export default function IntroPage() {
         process.env.NEXT_PUBLIC_SERVER_URL,
         data
       );
-      localStorage.setItem("data", JSON.stringify(discountApiResponse));
+      localStorage.setItem("fileName", JSON.stringify(discountApiResponse.file_name));
+      localStorage.setItem("data", JSON.stringify(discountApiResponse.discounts));
       navigate.push("/results");
       setUploadLoading(false);
     } catch (error) {
