@@ -288,9 +288,9 @@ export function NegotiationChatbot() {
               <SelectTrigger className="max-w-md mx-auto h-12 bg-[#2A2A36] border-gray-600 text-white placeholder:text-gray-500 rounded-xl">
                 <SelectValue placeholder="Select carrier" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-[#23232F] border-[#2A2A36] text-white">
                 {carriers?.map((carrier) => (
-                  <SelectItem key={carrier.value} value={carrier.value}>
+                  <SelectItem key={carrier.value} value={carrier.value} className="focus:bg-orange-500 focus:text-white">
                     {carrier.label}
                   </SelectItem>
                 ))}
