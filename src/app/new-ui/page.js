@@ -1,6 +1,6 @@
 "use client"
 
-import { ContractSimulator } from '@/components/ContractSimulator'
+import ContractSimulator from '@/components/ContractSimulator'
 import { GaugeChart } from '@/components/gauge-chart'
 import { SavingsChart } from '@/components/savings-graph'
 import { Card } from '@/components/ui/card'

@@ -72,7 +72,7 @@ export function GaugeChart({ score = 60 }) {
 
   return (
     <div
-      className={`${montserrat.className} h-[450px] flex flex-col items-center bg-[#313143] rounded-2xl border-2 border-[#464653] p-6`}
+      className={`${montserrat.className} h-[450px] flex flex-col items-center bg-[#2A2A36] rounded-2xl border-2 border-[#464653] p-6`}
     >
       <h2 className="text-xl font-bold text-white tracking-wide">
         HOW COMPETITIVE ARE YOU?

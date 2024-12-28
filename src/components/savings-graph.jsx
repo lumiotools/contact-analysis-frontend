@@ -34,13 +34,13 @@ const savingsData = [
 const chartConfig = {
   savings: {
     label: "Savings",
-    color: "#FFB323",
+    color: "#593F0C",
   },
 };
 
 export function SavingsChart() {
   return (
-    <div className="h-[450px] bg-[#313143] rounded-2xl border-2 border-[#464653] p-6 flex flex-col">
+    <div className="h-[450px] bg-[#2A2A36] rounded-2xl border-2 border-[#464653] p-6 flex flex-col">
       <h2 className="text-xl font-bold text-white tracking-wide text-center">
         SEE HOW MUCH YOU COULD SAVE!
       </h2>
@@ -99,7 +99,7 @@ export function SavingsChart() {
                 isFront={true}
               />
               <Area
-                type="monotone"
+                type="natural"
                 dataKey="savings"
                 stroke="#FFB323"
                 strokeWidth={3}
