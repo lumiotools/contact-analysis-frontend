@@ -37,7 +37,11 @@ export function GaugeChart({ score = 60 }) {
 
   useEffect(() => {
     requestRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(requestRef.current);
+    return () => {
+      if (requestRef.current) {
+        cancelAnimationFrame(requestRef.current);
+      }
+    };
   }, [score]);
 
   const normalizedScore = animatedScore / 100;
@@ -68,16 +72,18 @@ export function GaugeChart({ score = 60 }) {
 
   return (
     <div
-      className={`${montserrat.className} flex flex-col items-center space-y-1 mt-2 rounded-2xl bg-[#313143] p-6 border-2 border-[#464653]`}
+      className={`${montserrat.className} h-[450px] flex flex-col items-center bg-[#313143] rounded-2xl border-2 border-[#464653] p-6`}
     >
-      <h2 className="text-xl font-bold text-white">HOW COMPETITIVE ARE YOU?</h2>
+      <h2 className="text-xl font-bold text-white tracking-wide">
+        HOW COMPETITIVE ARE YOU?
+      </h2>
 
-      <div className="relative h-[300px] w-[500px]">
+      <div className="relative w-full ">
         <svg
-          className="absolute left-1/2 -top-8 -translate-x-1/2 rotate-180"
+          className="absolute rotate-180"
           viewBox={`0 0 ${svgSize} ${svgSize}`}
           width="500"
-          height="550"
+          height="500"
           preserveAspectRatio="xMidYMid meet"
         >
           {/* Dots */}
@@ -148,28 +154,25 @@ export function GaugeChart({ score = 60 }) {
           </defs>
         </svg>
 
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-11 text-center w-full space-y-1">
+        <div className="absolute left-1/2 -translate-x-1/2 translate-y-48 text-center w-full space-y-1">
           <div className="text-[44px] font-semibold text-[#FFB800] tabular-nums tracking-tight">
             {Math.round(animatedScore)}
             <span className="text-[40px]">/100</span>
           </div>
-
-          <p className="text-[24px] font-normal text-[#E2E2E2] w-full">
+          <p className="text-[24px] font-normal text-[#E2E2E2]">
             Top 10% among peers!
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col items-center text-center">
-        <p className="text-[18px] leading-relaxed text-[#B5B5B5] tracking-wide mt-3">
-          {"You're only "}
-          <span className="text-[#FFB323] font-semibold">7</span>
-          {" points away from"}
-          <br />
-          {"being in the Top "}
-          <span className="text-[#FFB323] font-semibold">5%</span>!
-        </p>
-      </div>
+      <p className="text-[18px] leading-relaxed text-[#B5B5B5] tracking-wide text-center mt-auto">
+        {"You're only "}
+        <span className="text-[#FFB323] font-semibold">7</span>
+        {" points away from"}
+        <br />
+        {"being in the Top "}
+        <span className="text-[#FFB323] font-semibold">5%</span>!
+      </p>
     </div>
   );
 }

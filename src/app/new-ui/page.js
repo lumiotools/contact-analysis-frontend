@@ -14,7 +14,7 @@ export default function Dashboard() {
       <div className="mx-auto max-w-6xl space-y-6">
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="bg-transparent border-none">
-            <GaugeChart score={40} />
+            <GaugeChart score={75} />
           </Card>
           <Card className="bg-transparent border-none">
             <SavingsChart />

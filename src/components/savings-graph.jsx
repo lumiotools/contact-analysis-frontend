@@ -40,14 +40,13 @@ const chartConfig = {
 
 export function SavingsChart() {
   return (
-    <Card className="bg-[#313143] border-2 border-[#464653]">
-      <CardHeader>
-        <CardTitle className="text-center text-xl font-bold text-white tracking-wide">
-          SEE HOW MUCH YOU COULD SAVE!
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="h-[300px]">
+    <div className="h-[450px] bg-[#313143] rounded-2xl border-2 border-[#464653] p-6 flex flex-col">
+      <h2 className="text-xl font-bold text-white tracking-wide text-center">
+        SEE HOW MUCH YOU COULD SAVE!
+      </h2>
+
+      <div className="flex-1 mt-4">
+        <ChartContainer config={chartConfig} className="h-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={savingsData}
@@ -80,7 +79,7 @@ export function SavingsChart() {
               <YAxis
                 tickFormatter={(value) => `$${value / 1000}K`}
                 domain={[10000, 50000]}
-                ticks={[10000, 30000, 50000, 70000]}
+                ticks={[10000, 30000, 50000]}
                 axisLine={false}
                 tickLine={false}
                 tick={{ fill: "#FFB323", fontSize: 14 }}
@@ -138,17 +137,14 @@ export function SavingsChart() {
             </AreaChart>
           </ResponsiveContainer>
         </ChartContainer>
-      </CardContent>
-      <CardFooter>
-        <p className="text-center text-base font-normal text-[#E2E2E2] w-full">
-          Unlock an additional{" "}
-          <span className="text-[#FFB323] font-bold">$10K</span> in savings by
-          improving your score by{" "}
-          <span className="text-[#FFB323] font-bold">10</span> points!
-        </p>
-      </CardFooter>
-    </Card>
+      </div>
+
+      <p className="text-base font-normal text-[#E2E2E2] text-center mt-auto">
+        Unlock an additional{" "}
+        <span className="text-[#FFB323] font-bold">$10K</span> in savings by
+        improving your score by{" "}
+        <span className="text-[#FFB323] font-bold">10</span> points!
+      </p>
+    </div>
   );
 }
-
-export default SavingsChart;
