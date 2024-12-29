@@ -137,7 +137,7 @@ export default function ContractSimulator() {
                 <span className="text-sm font-medium text-white">
                   Competitive Score
                 </span>
-                <div className="relative h-10 w-full md:w-[500px] overflow-hidden rounded-full bg-[#363647]">
+                <div className="relative h-10 w-full md:w-[370px] overflow-hidden rounded-full bg-[#363647]">
                   <div
                     className="h-full absolute left-0"
                     style={{
@@ -162,7 +162,7 @@ export default function ContractSimulator() {
 
         <div className="relative flex-1">
           <div
-            className="grid grid-cols-1 gap-1 sm:grid-cols-2 md:gap-x-2 md:gap-y-4 overflow-y-auto pr-4 -mr-4"
+            className="grid grid-cols-1 gap-1 sm:grid-cols-2 md:gap-x-2 md:gap-y-3 overflow-y-auto pr-4 -mr-4"
             style={{
               scrollbarWidth: "thin",
               scrollbarColor: "#464653 #2A2A36",
@@ -175,7 +175,7 @@ export default function ContractSimulator() {
             {contractData.services.map((service) => (
               <div key={service.id} className="w-full">
                 <div className="mb-2">
-                  <span className="text-base font-medium text-white">
+                  <span className="text-xs font-medium text-white">
                     {service.name}
                   </span>
                 </div>
@@ -184,10 +184,10 @@ export default function ContractSimulator() {
                     className="absolute pointer-events-none"
                     style={{
                       left: `calc(${discounts[service.name]}% - 20px)`,
-                      top: "-32px",
+                      top: "-35px",
                     }}
                   >
-                    <div className="relative -left-1.5 -top-1.5">
+                    <div className="relative -left-1 -top-2">
                       <div className="bg-[#FFA726] rounded-lg px-3 py-1 text-center min-w-[40px]">
                         <span className="text-sm font-semibold text-[#593F0C]">
                           {discounts[service.name]}
@@ -220,9 +220,9 @@ export default function ContractSimulator() {
                     )}
                   />
                   <div className="mt-2 flex justify-center">
-                    <div className="relative inline-flex rounded-full bg-[#424259] backdrop-blur-sm px-4 py-1 mt-1">
-                      <div className="absolute -top-1 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 transform bg-[#424259]" />
-                      <p className="text-sm font-medium text-[#E2E2E2]">
+                    <div className="relative inline-flex rounded-full bg-[#424259] backdrop-blur-sm px-4 py-1 -mt-0.5">
+                      <div className="absolute -top-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rotate-45 transform bg-[#424259]" />
+                      <p className="text-xs font-medium text-[#E2E2E2]">
                         Current Discount: {service.currentDiscount}
                       </p>
                     </div>

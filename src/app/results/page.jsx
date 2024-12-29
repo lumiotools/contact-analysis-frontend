@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import SavingsMetrics from "@/components/SavingsMetrics";
 import { combineData } from "@/utils/combineData";
 import { ContractChat } from "@/components/contract-chat";
+import Dashboard from "@/components/Dashboard";
 
 function DiscountRow({ service, isActive, onToggle }) {
   const getDiscountColor = (discount) => {
@@ -410,6 +411,8 @@ export default function DiscountResults() {
 
               <div className="space-y-10">
                 <SavingsMetrics />
+
+                <Dashboard></Dashboard>
 
                 <div className="space-y-6">
                   <p className="text-2xl font-bold text-white text-center">
