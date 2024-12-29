@@ -1,10 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 
-export default function ContractSimulator({ data }) {
+const formatNumber = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+export default function ContractSimulator({
+  data = { services: [], competitiveScore: 84 },
+}) {
   const [discounts, setDiscounts] = useState(() =>
     Object.fromEntries(
       (data?.services || []).map((service) => [
@@ -14,6 +20,10 @@ export default function ContractSimulator({ data }) {
     )
   );
 
+  const [competitiveScore, setCompetitiveScore] = useState(
+    data?.competitiveScore
+  );
+
   const handleDiscountChange = (service, value) => {
     setDiscounts((prev) => ({
       ...prev,
@@ -21,11 +31,30 @@ export default function ContractSimulator({ data }) {
     }));
   };
 
-  // Helper function to calculate tooltip position
+  // Update competitive score when discounts change
+  useEffect(() => {
+    if (Object.keys(discounts).length === 0) {
+      setCompetitiveScore(data?.competitiveScore || 84); // Set to default if no discounts
+      return;
+    }
+
+    const totalDiscount = Object.values(discounts).reduce(
+      (sum, discount) => sum + (discount.current || 0),
+      0
+    );
+    const averageDiscount = totalDiscount / Object.keys(discounts).length;
+
+    const baseScore = data?.competitiveScore || 84;
+    const scoreDelta = (averageDiscount - 50) / 2;
+    const newScore = Math.min(
+      100,
+      Math.max(0, Math.round(baseScore + scoreDelta))
+    );
+
+    setCompetitiveScore(newScore);
+  }, [discounts, data?.competitiveScore]);
+
   const getTooltipPosition = (value) => {
-    // For very low values (0-10%), keep tooltip at minimum 20px
-    // For very high values (90-100%), cap at maximum width - 40px
-    // For values in between, use percentage-based positioning
     const minPosition = 20;
     const maxPosition = `calc(100% - 40px)`;
 
@@ -58,7 +87,10 @@ export default function ContractSimulator({ data }) {
                   Current Saving:
                 </span>
                 <span className="font-semibold text-[#FFA726]">
-                  {data?.currentSaving || "$47k"}
+                  $
+                  {formatNumber(
+                    parseInt(data?.currentSaving?.replace(/\D/g, "") || "47000")
+                  )}
                 </span>
               </div>
 
@@ -66,8 +98,12 @@ export default function ContractSimulator({ data }) {
                 <div className="flex items-baseline">
                   <span className="text-3xl font-medium text-[#FFA726]">$</span>
                   <span className="text-5xl font-semibold text-[#FFA726]">
-                    {data?.totalPotentialSavings?.replace(/[^0-9]/g, "") ||
-                      "60"}
+                    {formatNumber(
+                      parseInt(
+                        data?.totalPotentialSavings?.replace(/\D/g, "") ||
+                          "60000"
+                      )
+                    )}
                   </span>
                   <span className="text-3xl font-medium text-[#FFA726]">k</span>
                 </div>
@@ -85,18 +121,16 @@ export default function ContractSimulator({ data }) {
                 </span>
                 <div className="relative h-10 w-full md:w-[370px] overflow-hidden rounded-full bg-[#363647]">
                   <div
-                    className="h-full absolute left-0"
+                    className="h-full absolute left-0 transition-all duration-300 ease-in-out"
                     style={{
-                      width: `${data?.competitiveScore || 84}%`,
+                      width: `${competitiveScore}%`,
                       background:
                         "linear-gradient(90deg, #FFD572 0%, #FEBD38 100%)",
                     }}
                   />
                   <div className="absolute inset-0 flex items-center justify-end pr-6">
                     <span className="text-lg font-medium">
-                      <span className="text-white">
-                        {data?.competitiveScore || 84}
-                      </span>
+                      <span className="text-white">{competitiveScore}</span>
                       <span className="text-[#B5B5B5]">/100</span>
                     </span>
                   </div>
