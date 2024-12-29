@@ -129,9 +129,9 @@ export default function ContractSimulator({
                     }}
                   />
                   <div className="absolute inset-0 flex items-center justify-end pr-6">
-                    <span className="text-lg font-medium">
+                    <span className="text-lg font-semibold">
                       <span className="text-white">{competitiveScore}</span>
-                      <span className="text-[#B5B5B5]">/100</span>
+                      <span className="text-white">/100</span>
                     </span>
                   </div>
                 </div>
