@@ -139,7 +139,7 @@ export function SavingsChart() {
         </ChartContainer>
       </div>
 
-      <p className="text-base font-normal text-[#E2E2E2] text-center pb-4">
+      <p className="text-base font-normal text-[#E2E2E2] text-center mt-1">
         Unlock an additional{" "}
         <span className="text-[#FFB323] font-bold">$10K</span> in savings by
         improving your score by{" "}

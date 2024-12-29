@@ -4,84 +4,12 @@ import { useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 
-export const contractData = {
-  services: [
-    {
-      id: 1,
-      name: "Next Day Package",
-      currentDiscount: "32%",
-      defaultValue: 65,
-      projectedSavings: "$12.5k",
-      category: "express",
-    },
-    {
-      id: 2,
-      name: "2 Day Package",
-      currentDiscount: "28%",
-      defaultValue: 72,
-      projectedSavings: "$8.3k",
-      category: "standard",
-    },
-    {
-      id: 3,
-      name: "3 Day Package",
-      currentDiscount: "35%",
-      defaultValue: 58,
-      projectedSavings: "$15.2k",
-      category: "standard",
-    },
-    {
-      id: 4,
-      name: "UPS Ground Commercial",
-      currentDiscount: "30%",
-      defaultValue: 68,
-      projectedSavings: "$9.7k",
-      category: "ground",
-    },
-    {
-      id: 5,
-      name: "DAS Commercial",
-      currentDiscount: "25%",
-      defaultValue: 75,
-      projectedSavings: "$11.3k",
-      category: "commercial",
-    },
-    {
-      id: 6,
-      name: "2 Day Air Package",
-      currentDiscount: "33%",
-      defaultValue: 62,
-      projectedSavings: "$13.8k",
-      category: "express",
-    },
-    {
-      id: 7,
-      name: "Express Delivery",
-      currentDiscount: "40%",
-      defaultValue: 55,
-      projectedSavings: "$18.2k",
-      category: "express",
-    },
-    {
-      id: 8,
-      name: "International Shipping",
-      currentDiscount: "22%",
-      defaultValue: 78,
-      projectedSavings: "$7.5k",
-      category: "international",
-    },
-  ],
-  totalPotentialSavings: "$60k",
-  currentSaving: "$47k",
-  competitiveScore: 84,
-};
-
-export default function ContractSimulator() {
-  const [discounts, setDiscounts] = useState(
+export default function ContractSimulator({ data }) {
+  const [discounts, setDiscounts] = useState(() =>
     Object.fromEntries(
-      contractData.services.map((service) => [
+      (data?.services || []).map((service) => [
         service.name,
-        parseInt(service.currentDiscount),
+        { current: service.defaultValue, default: service.defaultValue },
       ])
     )
   );
@@ -89,8 +17,25 @@ export default function ContractSimulator() {
   const handleDiscountChange = (service, value) => {
     setDiscounts((prev) => ({
       ...prev,
-      [service]: value[0],
+      [service]: { ...prev[service], current: value[0] },
     }));
+  };
+
+  // Helper function to calculate tooltip position
+  const getTooltipPosition = (value) => {
+    // For very low values (0-10%), keep tooltip at minimum 20px
+    // For very high values (90-100%), cap at maximum width - 40px
+    // For values in between, use percentage-based positioning
+    const minPosition = 20;
+    const maxPosition = `calc(100% - 40px)`;
+
+    if (value <= 10) {
+      return `${minPosition}px`;
+    } else if (value >= 90) {
+      return maxPosition;
+    } else {
+      return `calc(${value}% - 20px)`;
+    }
   };
 
   return (
@@ -113,7 +58,7 @@ export default function ContractSimulator() {
                   Current Saving:
                 </span>
                 <span className="font-semibold text-[#FFA726]">
-                  {contractData.currentSaving}
+                  {data?.currentSaving || "$47k"}
                 </span>
               </div>
 
@@ -121,7 +66,8 @@ export default function ContractSimulator() {
                 <div className="flex items-baseline">
                   <span className="text-3xl font-medium text-[#FFA726]">$</span>
                   <span className="text-5xl font-semibold text-[#FFA726]">
-                    60
+                    {data?.totalPotentialSavings?.replace(/[^0-9]/g, "") ||
+                      "60"}
                   </span>
                   <span className="text-3xl font-medium text-[#FFA726]">k</span>
                 </div>
@@ -141,7 +87,7 @@ export default function ContractSimulator() {
                   <div
                     className="h-full absolute left-0"
                     style={{
-                      width: "64%",
+                      width: `${data?.competitiveScore || 84}%`,
                       background:
                         "linear-gradient(90deg, #FFD572 0%, #FEBD38 100%)",
                     }}
@@ -149,7 +95,7 @@ export default function ContractSimulator() {
                   <div className="absolute inset-0 flex items-center justify-end pr-6">
                     <span className="text-lg font-medium">
                       <span className="text-white">
-                        {contractData.competitiveScore}
+                        {data?.competitiveScore || 84}
                       </span>
                       <span className="text-[#B5B5B5]">/100</span>
                     </span>
@@ -162,7 +108,7 @@ export default function ContractSimulator() {
 
         <div className="relative flex-1">
           <div
-            className="grid grid-cols-1 gap-1 sm:grid-cols-2 md:gap-x-2 md:gap-y-3 overflow-y-auto pr-4 -mr-4"
+            className="grid grid-cols-1 gap-1 sm:grid-cols-2 md:gap-x-2 md:gap-y-1 overflow-y-auto pr-4 -mr-4"
             style={{
               scrollbarWidth: "thin",
               scrollbarColor: "#464653 #2A2A36",
@@ -172,33 +118,39 @@ export default function ContractSimulator() {
               minHeight: "unset",
             }}
           >
-            {contractData.services.map((service) => (
+            {(data?.services || []).map((service) => (
               <div key={service.id} className="w-full">
-                <div className="mb-2">
+                <div className="mb-2 mt-3">
                   <span className="text-xs font-medium text-white">
                     {service.name}
                   </span>
                 </div>
-                <div className="relative mt-4">
+                <div className="relative mt-4" style={{ height: "60px" }}>
                   <div
                     className="absolute pointer-events-none"
                     style={{
-                      left: `calc(${discounts[service.name]}% - 20px)`,
+                      left: getTooltipPosition(
+                        discounts[service.name]?.current || service.defaultValue
+                      ),
                       top: "-35px",
                     }}
                   >
                     <div className="relative -left-1 -top-2">
                       <div className="bg-[#FFA726] rounded-lg px-3 py-1 text-center min-w-[40px]">
                         <span className="text-sm font-semibold text-[#593F0C]">
-                          {discounts[service.name]}
+                          {discounts[service.name]?.current ||
+                            service.defaultValue}
+                          %
                         </span>
                       </div>
                       <div className="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 transform bg-[#FFA726]" />
                     </div>
                   </div>
                   <Slider
-                    defaultValue={[parseInt(service.currentDiscount)]}
-                    value={[discounts[service.name]]}
+                    defaultValue={[service.defaultValue]}
+                    value={[
+                      discounts[service.name]?.current || service.defaultValue,
+                    ]}
                     onValueChange={(value) =>
                       handleDiscountChange(service.name, value)
                     }
@@ -220,8 +172,8 @@ export default function ContractSimulator() {
                     )}
                   />
                   <div className="mt-2 flex justify-center">
-                    <div className="relative inline-flex rounded-full bg-[#424259] backdrop-blur-sm px-4 py-1 -mt-0.5">
-                      <div className="absolute -top-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rotate-45 transform bg-[#424259]" />
+                    <div className="relative inline-flex rounded-full bg-[#424259] backdrop-blur-sm px-4 py-1">
+                      <div className="absolute -top-1 left-1/2 h-3 w-3 -translate-x-1/2 rotate-45 transform bg-[#424259]" />
                       <p className="text-xs font-medium text-[#E2E2E2]">
                         Current Discount: {service.currentDiscount}
                       </p>
