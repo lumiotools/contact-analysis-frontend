@@ -82,8 +82,8 @@ export function GaugeChart({ score = 60 }) {
         <svg
           className="absolute rotate-180"
           viewBox={`0 0 ${svgSize} ${svgSize}`}
-          width="500"
-          height="500"
+          width="450"
+          height="450"
           preserveAspectRatio="xMidYMid meet"
         >
           {/* Dots */}
@@ -154,8 +154,8 @@ export function GaugeChart({ score = 60 }) {
           </defs>
         </svg>
 
-        <div className="absolute left-1/2 -translate-x-1/2 translate-y-48 text-center w-full space-y-1">
-          <div className="text-[44px] font-semibold text-[#FFB800] tabular-nums tracking-tight">
+        <div className="absolute left-1/2 -translate-x-1/2 translate-y-44 text-center w-full space-y-1">
+          <div className="ml-4 text-[44px] font-semibold text-[#FFB800] tabular-nums tracking-tight">
             {Math.round(animatedScore)}
             <span className="text-[40px]">/100</span>
           </div>

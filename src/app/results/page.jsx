@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import SavingsMetrics from "@/components/SavingsMetrics";
 import { combineData } from "@/utils/combineData";
 import { ContractChat } from "@/components/contract-chat";
+import Dashboard from "@/components/Dashboard";
 
 function DiscountRow({ service, isActive, onToggle }) {
   const getDiscountColor = (discount) => {
@@ -391,7 +392,7 @@ export default function DiscountResults() {
   console.log("com", combineData(analysis, graphData));
   return (
     <div className="h-screen bg-[#1C1C28] flex items-center justify-center w-full">
-      <div className="w-full h-full max-w-[1800px] mx-auto">
+      <div className="w-full h-full max-w-8xl mx-auto">
         <div className="relative h-full w-full bg-[#23232F]/90 backdrop-blur-xl border border-[#2A2A36] overflow-x-hidden">
           <div className="relative z-10 p-8 md:p-12 lg:p-16">
             <Button
@@ -403,13 +404,15 @@ export default function DiscountResults() {
               Back
             </Button>
 
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-5xl mx-auto">
               {/* <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">
                 Discount Results
               </h1> */}
 
               <div className="space-y-10">
                 <SavingsMetrics />
+
+                <Dashboard></Dashboard>
 
                 <div className="space-y-6">
                   <p className="text-2xl font-bold text-white text-center">
