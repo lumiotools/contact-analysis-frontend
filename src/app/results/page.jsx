@@ -59,7 +59,7 @@ function DiscountRow({ service, isActive, onToggle }) {
                   service.discount
                 )}`}
               >
-                ~ {service.discount}
+                ~{service.discount}
                 {new String(service.discount).endsWith("%")
                   ? ""
                   : new String(service.discount).includes("No")
