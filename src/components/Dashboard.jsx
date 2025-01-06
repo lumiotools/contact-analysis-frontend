@@ -7,6 +7,7 @@ import { SavingsChart } from "./savings-graph";
 import ContractSimulator from "./ContractSimulator";
 import { useEffect, useState } from "react";
 import { extractContractData } from "@/utils/extractContractData";
+import { DashboardHeader } from "./DashboardHeader";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -29,10 +30,11 @@ export default function Dashboard() {
     fetchData();
   }, []);
 
-  console.log("contractData",contractData)
+  console.log("contractData", contractData);
 
   return (
     <div className={`min-h-screen ${montserrat.className}`}>
+      <DashboardHeader />
       <div className="space-y-6">
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="bg-transparent border-none">
