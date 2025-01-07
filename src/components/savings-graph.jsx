@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
 import {
   Area,
   AreaChart,
@@ -38,7 +39,36 @@ const chartConfig = {
   },
 };
 
-export function SavingsChart() {
+export function SavingsChart({ animate = false }) {
+  const [animatedData, setAnimatedData] = useState([]);
+
+  useEffect(() => {
+    if (animate) {
+      setAnimatedData([]);
+      const animationDuration = 2000; // 2 seconds
+      const steps = 60; // 60 frames for smooth animation
+      const stepDuration = animationDuration / steps;
+
+      let step = 0;
+      const intervalId = setInterval(() => {
+        if (step < steps) {
+          const newData = savingsData.map((item, index) => ({
+            ...item,
+            savings: (item.savings * (step + 1)) / steps,
+          }));
+          setAnimatedData(newData);
+          step++;
+        } else {
+          clearInterval(intervalId);
+        }
+      }, stepDuration);
+
+      return () => clearInterval(intervalId);
+    } else {
+      setAnimatedData(savingsData);
+    }
+  }, [animate]);
+
   return (
     <div className="h-[450px] bg-[#2A2A36] rounded-2xl border-2 border-[#464653] p-6 flex flex-col">
       <h2 className="text-xl font-bold text-white tracking-wide text-center">
@@ -49,7 +79,7 @@ export function SavingsChart() {
         <ChartContainer config={chartConfig} className="h-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
-              data={savingsData}
+              data={animatedData}
               margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
             >
               <defs>

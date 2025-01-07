@@ -5,7 +5,7 @@ import { Montserrat } from "next/font/google";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
-export function GaugeChart({ score = 60 }) {
+export function GaugeChart({ score = 60, animate = false }) {
   const [animatedScore, setAnimatedScore] = useState(0);
   const requestRef = useRef();
   const startTimeRef = useRef();
@@ -18,7 +18,7 @@ export function GaugeChart({ score = 60 }) {
   const svgSize = (radius + strokeWidth) * 2;
   const centerPoint = svgSize / 2;
 
-  const animate = (time) => {
+  const animateChart = (time) => {
     if (startTimeRef.current === undefined) {
       startTimeRef.current = time;
     }
@@ -31,18 +31,25 @@ export function GaugeChart({ score = 60 }) {
     setAnimatedScore(currentScore);
 
     if (progress < 1) {
-      requestRef.current = requestAnimationFrame(animate);
+      requestRef.current = requestAnimationFrame(animateChart);
     }
   };
 
   useEffect(() => {
-    requestRef.current = requestAnimationFrame(animate);
+    if (animate) {
+      setAnimatedScore(0);
+      startTimeRef.current = undefined;
+      requestRef.current = requestAnimationFrame(animateChart);
+    } else {
+      setAnimatedScore(score);
+    }
+
     return () => {
       if (requestRef.current) {
         cancelAnimationFrame(requestRef.current);
       }
     };
-  }, [score]);
+  }, [animate, score]);
 
   const normalizedScore = animatedScore / 100;
   const offset = arc - arc * normalizedScore;

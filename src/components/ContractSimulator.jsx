@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ const formatNumber = (num) => {
 
 export default function ContractSimulator({
   data = { services: [], competitiveScore: 84 },
+  animate = false,
 }) {
   const [discounts, setDiscounts] = useState(() =>
     Object.fromEntries(
@@ -23,6 +24,7 @@ export default function ContractSimulator({
   const [competitiveScore, setCompetitiveScore] = useState(
     data?.competitiveScore
   );
+  const [animatedScore, setAnimatedScore] = useState(0);
 
   const handleDiscountChange = (service, value) => {
     setDiscounts((prev) => ({
@@ -53,6 +55,29 @@ export default function ContractSimulator({
 
     setCompetitiveScore(newScore);
   }, [discounts, data?.competitiveScore]);
+
+  useEffect(() => {
+    if (animate) {
+      setAnimatedScore(0);
+      const animationDuration = 2000; // 2 seconds
+      const steps = 60; // 60 frames for smooth animation
+      const stepDuration = animationDuration / steps;
+
+      let step = 0;
+      const intervalId = setInterval(() => {
+        if (step < steps) {
+          setAnimatedScore((competitiveScore * (step + 1)) / steps);
+          step++;
+        } else {
+          clearInterval(intervalId);
+        }
+      }, stepDuration);
+
+      return () => clearInterval(intervalId);
+    } else {
+      setAnimatedScore(competitiveScore);
+    }
+  }, [animate, competitiveScore]);
 
   const getTooltipPosition = (value) => {
     const minPosition = 20;
@@ -123,14 +148,16 @@ export default function ContractSimulator({
                   <div
                     className="h-full absolute left-0 transition-all duration-300 ease-in-out"
                     style={{
-                      width: `${competitiveScore}%`,
+                      width: `${animatedScore}%`,
                       background:
                         "linear-gradient(90deg, #FFD572 0%, #FEBD38 100%)",
                     }}
                   />
                   <div className="absolute inset-0 flex items-center justify-end pr-6">
                     <span className="text-lg font-semibold">
-                      <span className="text-white">{competitiveScore}</span>
+                      <span className="text-white">
+                        {Math.round(animatedScore)}
+                      </span>
                       <span className="text-white">/100</span>
                     </span>
                   </div>

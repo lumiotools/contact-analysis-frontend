@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
@@ -22,6 +21,9 @@ export default function Dashboard() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [showChallengesDropdown, setShowChallengesDropdown] = useState(false);
+  const [animateGauge, setAnimateGauge] = useState(false);
+  const [animateSavings, setAnimateSavings] = useState(false);
+  const [animateContract, setAnimateContract] = useState(false);
   const dashboardRef = useRef(null);
   const headerRef = useRef(null);
 
@@ -64,6 +66,11 @@ export default function Dashboard() {
     } else {
       setShowChallengesDropdown(false);
     }
+
+    // Trigger animations based on the current step
+    setAnimateGauge(currentStep === 2);
+    setAnimateSavings(currentStep === 3);
+    setAnimateContract(currentStep === 4);
   }, [currentStep]);
 
   const handleCloseOnboarding = () => {
@@ -149,15 +156,14 @@ export default function Dashboard() {
     }
   };
 
-  const shouldBlurHeader = showOnboarding && (currentStep === 0 || currentStep === 2 || currentStep === 5);
+  const shouldBlurHeader =
+    showOnboarding &&
+    (currentStep === 0 || currentStep === 2 || currentStep === 5);
   const shouldBlurChallenges = showOnboarding && currentStep !== 5;
 
   return (
     <div className="min-h-screen relative">
-      <div
-        ref={headerRef}
-        className="w-full py-4 transition-all duration-300"
-      >
+      <div ref={headerRef} className="w-full py-4 transition-all duration-300">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className={shouldBlurHeader ? "filter blur-sm" : ""}>
             <DashboardHeader />
@@ -179,14 +185,17 @@ export default function Dashboard() {
               showOnboarding && currentStep !== 2 ? "filter blur-sm" : ""
             }`}
           >
-            <GaugeChart score={contractData?.competitiveScore || 75} />
+            <GaugeChart
+              score={contractData?.competitiveScore || 75}
+              animate={animateGauge}
+            />
           </Card>
           <Card
             className={`bg-transparent border-none transition-all duration-300 ${
               showOnboarding && currentStep !== 3 ? "filter blur-sm" : ""
             }`}
           >
-            <SavingsChart data={graphData} />
+            <SavingsChart data={graphData} animate={animateSavings} />
           </Card>
         </div>
         <Card
@@ -194,7 +203,7 @@ export default function Dashboard() {
             showOnboarding && currentStep !== 4 ? "filter blur-sm" : ""
           }`}
         >
-          <ContractSimulator data={contractData} />
+          <ContractSimulator data={contractData} animate={animateContract} />
         </Card>
       </div>
 
@@ -206,4 +215,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
