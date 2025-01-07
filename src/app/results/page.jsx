@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NegotiationChatbot } from "@/components/negotiation-chatbot";
@@ -143,9 +144,7 @@ export default function DiscountResults() {
 
   useEffect(() => {
     setLoading(true);
-    // setTimeout(() => {
     fetchData();
-    // }, 2000);
   }, []);
 
   const domesticAirServiceLevels = [];
@@ -179,13 +178,11 @@ export default function DiscountResults() {
     );
   }
 
-  //domestic res and comm
-
+  // Process domesticGround data
   if (analysis.domesticGround1) {
     const groundData1 =
       analysis.domesticGround1["DOMESTIC GROUND SERVICE LEVEL"];
 
-    // Get Commercial and Residential Current UPS from domesticGround1
     let commercialCurrentUPS = 0;
     let residentialCurrentUPS = 0;
 
@@ -207,7 +204,6 @@ export default function DiscountResults() {
         ) || 0;
     }
 
-    // Process domesticGround2 to add incentives
     if (
       analysis.domesticGround2 &&
       analysis.domesticGround2["DOMESTIC GROUND SERVICE LEVEL"]
@@ -220,7 +216,6 @@ export default function DiscountResults() {
       const residentialIncentivesKey =
         "UPS® Ground - Residential Package - Prepaid - Incentives Off Effective Rates";
 
-      // Collect all incentives to find the minimum non-null incentive
       let allIncentives = [];
 
       [commercialIncentivesKey, residentialIncentivesKey].forEach((key) => {
@@ -237,11 +232,9 @@ export default function DiscountResults() {
         }
       });
 
-      // If no non-null incentives found, fallback to a known minimum (e.g., 53)
       const minIncentive =
         allIncentives.length > 0 ? Math.min(...allIncentives) : 53;
 
-      // Commercial weight ranges
       if (groundData2[commercialIncentivesKey]) {
         const commercialIncentives = groundData2[commercialIncentivesKey];
         Object.keys(commercialIncentives).forEach((weightRange) => {
@@ -259,7 +252,6 @@ export default function DiscountResults() {
         });
       }
 
-      // Residential weight ranges
       if (groundData2[residentialIncentivesKey]) {
         const residentialIncentives = groundData2[residentialIncentivesKey];
         Object.keys(residentialIncentives).forEach((weightRange) => {
@@ -278,7 +270,6 @@ export default function DiscountResults() {
       }
     }
 
-    // Display domesticGround3 as is
     if (
       analysis.domesticGround3 &&
       analysis.domesticGround3["DOMESTIC GROUND SERVICE LEVEL"] &&
@@ -306,7 +297,6 @@ export default function DiscountResults() {
     const processDirection = (direction) => {
       const directionData = internationalData[direction];
 
-      // Gather all non-null incentives for this direction
       const incentivesArray = [];
       Object.keys(directionData).forEach((service) => {
         const data = directionData[service];
@@ -323,11 +313,9 @@ export default function DiscountResults() {
         });
       });
 
-      // Find the minimum non-null incentive, default to 0 if none found
       const minIncentive =
         incentivesArray.length > 0 ? Math.min(...incentivesArray) : 0;
 
-      // Now process each service and type to sum Current UPS and incentive
       Object.keys(directionData).forEach((service) => {
         const data = directionData[service];
 
@@ -336,13 +324,11 @@ export default function DiscountResults() {
             const currentUPSStr = data[type]["Current UPS"];
             const incentiveStr = data[type]["Incentives Off Effective Rates"];
 
-            // Parse Current UPS
             let currentUPSVal = 0;
             if (currentUPSStr && currentUPSStr.endsWith("%")) {
               currentUPSVal = parseFloat(currentUPSStr.replace("%", ""));
             }
 
-            // Parse Incentive or use min if null
             let incentiveVal = minIncentive;
             if (incentiveStr && incentiveStr.endsWith("%")) {
               const parsedIncentive = parseFloat(incentiveStr.replace("%", ""));
@@ -351,7 +337,6 @@ export default function DiscountResults() {
               }
             }
 
-            // Sum them
             const total = currentUPSVal + incentiveVal;
             const formattedTotal = isNaN(total)
               ? "No Discount"
@@ -367,7 +352,6 @@ export default function DiscountResults() {
       });
     };
 
-    // Process both Export and Import
     if (internationalData["Export"]) {
       processDirection("Export");
     }
@@ -387,33 +371,44 @@ export default function DiscountResults() {
     });
   }
 
-  console.log("analysis", analysis);
-  console.log("analysis graph", graphData);
-  console.log("com", combineData(analysis, graphData));
   return (
-    <div className="h-screen bg-[#1C1C28] flex items-center justify-center w-full">
-      <div className="w-full h-full max-w-8xl mx-auto">
+    <div className="min-h-screen bg-[#1C1C28] flex flex-col">
+      <div className="w-full max-w-8xl mx-auto flex-grow">
         <div className="relative h-full w-full bg-[#23232F]/90 backdrop-blur-xl border border-[#2A2A36] overflow-x-hidden">
-          <div className="relative z-10 p-8 md:p-12 lg:p-16">
-            <Button
-              variant="ghost"
-              className="absolute left-8 top-8 text-gray-400 hover:bg-gray-800/50 hover:text-white"
-              onClick={() => navigate.push("/")}
-            >
-              <ArrowLeft className="mr-2 h-5 w-5" />
-              Back
-            </Button>
-
-            <div className="max-w-5xl mx-auto">
-              {/* <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">
-                Discount Results
-              </h1> */}
-
+          <div className="relative z-10 px-4 pb-8 md:pb-12 lg:pb-16">
+            {" "}
+            {/* Updated outer container classes */}
+            <div className="max-w-[1400px] mx-auto">
+              {" "}
+              {/* Updated outer container classes */}
+              <Button
+                variant="ghost"
+                className="absolute left-8 top-8 text-gray-400 hover:bg-gray-800/50 hover:text-white"
+                onClick={() => navigate.push("/")}
+              >
+                <ArrowLeft className="mr-2 h-5 w-5" />
+                Back
+              </Button>
               <div className="space-y-10">
-                <SavingsMetrics />
+                {/* SavingsMetrics Section */}
+                <div className="min-h-screen w-full flex items-center justify-center">
+                  {" "}
+                  {/* Updated SavingsMetrics container div */}
+                  <div className="w-full max-w-5xl mx-auto px-4">
+                    <SavingsMetrics />
+                  </div>
+                </div>
 
-                <Dashboard></Dashboard>
+                {/* Dashboard Section */}
+                <div className="min-h-screen w-full flex items-center justify-center">
+                  {" "}
+                  {/* Updated Dashboard container div */}
+                  <div className="w-full max-w-5xl mx-auto px-4">
+                    <Dashboard />
+                  </div>
+                </div>
 
+                {/* Discount Results Section */}
                 <div className="space-y-6">
                   <p className="text-2xl font-bold text-white text-center">
                     Domestic Air Service Levels
@@ -428,14 +423,19 @@ export default function DiscountResults() {
                   ))}
 
                   <p className="text-2xl font-bold text-white text-center">
-                    Domestic Ground Service Levels (Coming Soon)
+                    Domestic Ground Service Levels
                   </p>
                   {domesticGroundServiceLevels.map((service, index) => (
                     <DiscountRow
                       key={index}
                       service={service}
-                      isActive={activeRowIndex === index}
-                      onToggle={() => handleRowToggle(index)}
+                      isActive={
+                        activeRowIndex ===
+                        index + domesticAirServiceLevels.length
+                      }
+                      onToggle={() =>
+                        handleRowToggle(index + domesticAirServiceLevels.length)
+                      }
                     />
                   ))}
 
@@ -446,8 +446,19 @@ export default function DiscountResults() {
                     <DiscountRow
                       key={index}
                       service={service}
-                      isActive={activeRowIndex === index}
-                      onToggle={() => handleRowToggle(index)}
+                      isActive={
+                        activeRowIndex ===
+                        index +
+                          domesticAirServiceLevels.length +
+                          domesticGroundServiceLevels.length
+                      }
+                      onToggle={() =>
+                        handleRowToggle(
+                          index +
+                            domesticAirServiceLevels.length +
+                            domesticGroundServiceLevels.length
+                        )
+                      }
                     />
                   ))}
 
@@ -458,13 +469,26 @@ export default function DiscountResults() {
                     <DiscountRow
                       key={index}
                       service={charge}
-                      isActive={activeRowIndex === index}
-                      onToggle={() => handleRowToggle(index)}
+                      isActive={
+                        activeRowIndex ===
+                        index +
+                          domesticAirServiceLevels.length +
+                          domesticGroundServiceLevels.length +
+                          internationalServiceLevels.length
+                      }
+                      onToggle={() =>
+                        handleRowToggle(
+                          index +
+                            domesticAirServiceLevels.length +
+                            domesticGroundServiceLevels.length +
+                            internationalServiceLevels.length
+                        )
+                      }
                     />
                   ))}
                 </div>
 
-                <ContractChat/>
+                <ContractChat />
 
                 <NegotiationChatbot />
               </div>

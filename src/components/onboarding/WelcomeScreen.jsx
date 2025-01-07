@@ -3,9 +3,9 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import Rocket from "../../../public/rocket.svg";
 import next from "../../../public/next-ploy.svg";
 import prev from "../../../public/prev-ploy.svg";
+import { AnimatedRocket } from "./AnimatedRocket";
 
 export function WelcomeScreen({ onClose, onNext }) {
   return (
@@ -20,12 +20,8 @@ export function WelcomeScreen({ onClose, onNext }) {
 
       <div className="bg-white rounded-2xl p-4 px-6 w-full shadow-lg">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-24 h-24 rounded-full flex items-center justify-center mb-6">
-            <Image
-              src={Rocket}
-              alt=""
-              className="w-full h-full object-contain"
-            />
+          <div className="mb-6">
+            <AnimatedRocket />
           </div>
           <h2 className="text-2xl font-semibold text-center text-gray-800">
             Welcome to the Contract Discounts
