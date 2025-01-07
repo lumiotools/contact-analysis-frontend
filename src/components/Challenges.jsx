@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function DashboardChallenges() {
+export function DashboardChallenges({ isOpen = false }) {
   const currentXP = 100;
   const maxXP = 300;
   const progress = (currentXP / maxXP) * 100;
@@ -20,7 +20,7 @@ export function DashboardChallenges() {
 
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu open={isOpen}>
         <DropdownMenuTrigger asChild>
           <button
             className="relative flex items-center gap-3 px-12 py-2 rounded-full 

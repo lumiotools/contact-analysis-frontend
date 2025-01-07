@@ -13,12 +13,12 @@ export function WelcomeScreen({ onClose, onNext }) {
       <Button
         variant="ghost"
         onClick={onClose}
-        className="absolute -top-8 right-2 text-[#FFB323] hover:text-[#FFB323] hover:bg-transparent p-0 text-base font-medium"
+        className="absolute -top-8 right-2 text-[#FFB323] hover:text-[#FFB323] hover:bg-transparent p-0 text-base font-semibold italic"
       >
         Skip
       </Button>
 
-      <div className="bg-white rounded-3xl p-4 px-6 w-full shadow-lg">
+      <div className="bg-white rounded-2xl p-4 px-6 w-full shadow-lg">
         <div className="flex flex-col items-center mb-8">
           <div className="w-24 h-24 rounded-full flex items-center justify-center mb-6">
             <Image
@@ -45,17 +45,15 @@ export function WelcomeScreen({ onClose, onNext }) {
       </div>
 
       <div className="absolute left-0 right-0 flex items-end justify-end mt-2">
-        <div 
-          className="w-10 h-10 rounded-full flex items-center justify-center mb-6 cursor-pointer"
-        >
+        <div className="w-8 h-8 rounded-full flex items-center justify-center mb-6 cursor-pointer">
           <Image
             src={prev}
             alt="Prev"
             className="w-full h-full object-contain"
           />
         </div>
-        <div 
-          className="w-10 h-10 rounded-full flex items-center justify-center mb-6 cursor-pointer"
+        <div
+          className="w-8 h-8 rounded-full flex items-center justify-center mb-6 cursor-pointer"
           onClick={onNext}
         >
           <Image
@@ -68,4 +66,3 @@ export function WelcomeScreen({ onClose, onNext }) {
     </div>
   );
 }
-

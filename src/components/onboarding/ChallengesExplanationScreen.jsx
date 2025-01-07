@@ -6,14 +6,14 @@ import Image from "next/image";
 import next from "../../../public/next-ploy.svg";
 import prev from "../../../public/prev-next.svg";
 
-export function LevelExplanationScreen({
+export function ChallengesExplanationScreen({
   onClose,
   onNext,
   onPrev,
   currentStep,
 }) {
   return (
-    <div className="absolute top-24 left-1/2 -translate-x-1/2 w-full max-w-xs mx-auto -ml-32">
+    <div className="absolute top-40 right-1/3 w-full max-w-md -mr-3">
       <Button
         variant="ghost"
         onClick={onClose}
@@ -23,16 +23,20 @@ export function LevelExplanationScreen({
       </Button>
 
       <div className="bg-white rounded-2xl p-6 w-full shadow-lg relative">
-        {/* Pointed tip */}
-        <div className="absolute -top-3 left-[50px] -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[16px] border-b-white" />
+        <div className="absolute -right-3 top-10 -translate-y-1/2 w-0 h-0 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent border-l-[16px] border-l-white" />
 
         <div className="mb-4">
+          <h3 className="text-[#424259] text-lg font-semibold mb-2">
+            Finally, Explore the Challenges Section!
+          </h3>
           <p className="text-[#424259] text-base italic">
-            This is your current level and XP tracker. As you complete
-            challenges and improve your{" "}
-            <span className="font-semibold">XP score</span>, you'll level up and
-            unlock new <span className="font-semibold">levels</span> and{" "}
-            <span className="font-semibold">challenges!</span>
+            Let's talk challenges! Click on the 'Challenges' button to{" "}
+            <span className="font-semibold">view/track</span> ongoing
+            challenges. Each completed challenge earns you{" "}
+            <span className="font-semibold">30XP</span> and boosts your level.
+            Use the Tip Bar within for{" "}
+            <span className="font-semibold">quick tips</span> to finish them
+            efficiently.
           </p>
         </div>
         <div className="text-sm text-gray-500 italic">
@@ -40,26 +44,18 @@ export function LevelExplanationScreen({
         </div>
       </div>
 
-      <div className="absolute -bottom-10 left-0 right-0 flex justify-end mt-2">
+      <div className="absolute -bottom-10 right-0 flex justify-end gap-2">
         <button
           onClick={onPrev}
           className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
         >
-          <Image
-            src={prev}
-            alt="Previous"
-            className="w-full h-full object-contain"
-          />
+          <Image src={prev} alt="Previous" className="w-6 h-6 object-contain" />
         </button>
         <button
           onClick={onNext}
           className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
         >
-          <Image
-            src={next}
-            alt="Next"
-            className="w-full h-full object-contain"
-          />
+          <Image src={next} alt="Next" className="w-6 h-6 object-contain" />
         </button>
       </div>
     </div>
