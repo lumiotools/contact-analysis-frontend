@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Target, Info } from "lucide-react";
+import { Target, Info } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -96,8 +96,12 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
       >
         <div
           ref={contentRef}
-          className="space-y-2 h-[160px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#FFD572] scrollbar-track-[#2A2A36]"
           onScroll={handleScroll}
+          className="space-y-2 h-[160px] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#22222E] [&::-webkit-scrollbar-track]:bg-[#22222E]/20"
+          style={{
+            scrollbarWidth: "none",
+            scrollbarColor: '#22222E #22222E20'
+          }}
         >
           {/* Ongoing Challenges Header */}
           <div className="flex items-center justify-between mb-2">

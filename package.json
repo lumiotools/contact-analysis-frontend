@@ -29,6 +29,7 @@
     "recharts": "^2.13.3",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-scrollbar": "^0.1.0",
     "uuid": "^11.0.3"
   },
   "devDependencies": {

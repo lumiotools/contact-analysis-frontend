@@ -17,8 +17,7 @@ export function ChallengesExplanationScreen({
       <Button
         variant="ghost"
         onClick={onClose}
-        className="absolute -top-8 right-2 text-[#FFB323] hover:text-[#FFB323] hover:bg-transparent p-0 text-base font-semibold italic"
-      >
+        className="absolute -top-8 right-2 text-[#FFB323] hover:text-[#FFB323]/80 cursor-pointer hover:bg-transparent p-0 text-base font-semibold italic">       
         Skip
       </Button>
 
