@@ -40,7 +40,7 @@ export function WelcomeScreen({ onClose, onNext }) {
         </p>
       </div>
 
-      <div className="absolute left-0 right-0 flex items-end justify-end mt-2">
+      <div className="absolute left-0 right-0 flex items-end justify-end mt-2 pt-2 gap-3">
         <div className="w-8 h-8 rounded-full flex items-center justify-center mb-6 cursor-pointer">
           <Image
             src={prev}

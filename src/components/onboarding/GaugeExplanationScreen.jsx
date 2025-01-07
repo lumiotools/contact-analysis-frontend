@@ -13,7 +13,7 @@ export function GaugeExplanationScreen({
   currentStep,
 }) {
   return (
-    <div className="absolute top-1/4 right-28 w-full max-w-sm">
+    <div className="absolute top-1/4 right-24 w-full max-w-sm">
       <Button
         variant="ghost"
         onClick={onClose}
@@ -23,10 +23,17 @@ export function GaugeExplanationScreen({
       </Button>
 
       <div className="bg-white rounded-2xl p-6 w-full shadow-lg relative">
-        <div className="absolute -left-3 top-10 -translate-y-1/2 w-0 h-0 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent border-r-[16px] border-r-white" />
+        {/* Rounded pointer tip - pointing left */}
+        <div
+          className="absolute -left-0.5 top-10 -translate-x-1/2 w-6 h-6 bg-white"
+          style={{
+            transform: "rotate(-45deg) translateX(-50%)",
+            borderTopLeftRadius: "4px",
+          }}
+        />
 
         <div className="mb-4">
-          <h3 className="text-[#424259] text-lg font-semibold mb-2">
+          <h3 className="text-[#424259] text-lg font-semibold mb-2 italic">
             How Competitive Are You?
           </h3>
           <p className="text-[#424259] text-base italic">
@@ -38,12 +45,12 @@ export function GaugeExplanationScreen({
             perks!"
           </p>
         </div>
-        <div className="text-sm text-gray-500 italic">
+        <div className="text-sm text-[#1E1E1E] italic font-medium">
           Step {currentStep} of 5
         </div>
       </div>
 
-      <div className="absolute -bottom-10 left-0 right-0 flex justify-end mt-2">
+      <div className="absolute -bottom-12 left-0 right-0 flex justify-end pt-2 gap-3">
         <button
           onClick={onPrev}
           className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"

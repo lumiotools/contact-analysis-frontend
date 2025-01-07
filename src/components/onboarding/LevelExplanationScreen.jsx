@@ -13,7 +13,7 @@ export function LevelExplanationScreen({
   currentStep,
 }) {
   return (
-    <div className="absolute top-24 left-1/2 -translate-x-1/2 w-full max-w-xs mx-auto -ml-32">
+    <div className="absolute top-28 left-1/2 -translate-x-1/2 w-full max-w-xs mx-auto -ml-24">
       <Button
         variant="ghost"
         onClick={onClose}
@@ -23,8 +23,14 @@ export function LevelExplanationScreen({
       </Button>
 
       <div className="bg-white rounded-2xl p-6 w-full shadow-lg relative">
-        {/* Pointed tip */}
-        <div className="absolute -top-3 left-[50px] -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-b-[16px] border-b-white" />
+        {/* Rounded pointer tip */}
+        <div
+          className="absolute -top-4 left-[50px] -translate-x-1/2 w-6 h-6 bg-white"
+          style={{
+            transform: "rotate(45deg) translateY(50%)",
+            borderTopLeftRadius: "4px",
+          }}
+        />
 
         <div className="mb-4">
           <p className="text-[#424259] text-base italic">
@@ -35,12 +41,12 @@ export function LevelExplanationScreen({
             <span className="font-semibold">challenges!</span>
           </p>
         </div>
-        <div className="text-sm text-gray-500 italic">
+        <div className="text-sm text-[#1E1E1E] italicfont-medium">
           Step {currentStep} of 5
         </div>
       </div>
 
-      <div className="absolute -bottom-10 left-0 right-0 flex justify-end mt-2">
+      <div className="absolute -bottom-12 left-0 right-0 flex justify-end pt-2 gap-3">
         <button
           onClick={onPrev}
           className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"

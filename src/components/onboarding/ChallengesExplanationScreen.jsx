@@ -13,7 +13,7 @@ export function ChallengesExplanationScreen({
   currentStep,
 }) {
   return (
-    <div className="absolute top-40 right-1/3 w-full max-w-md -mr-3">
+    <div className="absolute top-40 right-1/3 w-full max-w-md mr-2">
       <Button
         variant="ghost"
         onClick={onClose}
@@ -23,10 +23,17 @@ export function ChallengesExplanationScreen({
       </Button>
 
       <div className="bg-white rounded-2xl p-6 w-full shadow-lg relative">
-        <div className="absolute -right-3 top-10 -translate-y-1/2 w-0 h-0 border-t-[12px] border-t-transparent border-b-[12px] border-b-transparent border-l-[16px] border-l-white" />
+        {/* Rounded pointer tip - pointing left */}
+        <div
+          className="absolute -right-1 top-10 w-6 h-6 bg-white"
+          style={{
+            transform: "rotate(45deg) translateY(-50%)",
+            borderTopRightRadius: "4px",
+          }}
+        />
 
         <div className="mb-4">
-          <h3 className="text-[#424259] text-lg font-semibold mb-2">
+          <h3 className="text-[#424259] text-lg font-semibold mb-2 italic">
             Finally, Explore the Challenges Section!
           </h3>
           <p className="text-[#424259] text-base italic">
@@ -39,23 +46,31 @@ export function ChallengesExplanationScreen({
             efficiently.
           </p>
         </div>
-        <div className="text-sm text-gray-500 italic">
+        <div className="text-sm text-[#1E1E1E] italic font-medium">
           Step {currentStep} of 5
         </div>
       </div>
 
-      <div className="absolute -bottom-10 right-0 flex justify-end gap-2">
+      <div className="absolute -bottom-12 left-0 right-0 flex justify-end pt-2 gap-3">
         <button
           onClick={onPrev}
           className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
         >
-          <Image src={prev} alt="Previous" className="w-6 h-6 object-contain" />
+          <Image
+            src={prev}
+            alt="Previous"
+            className="w-full h-full object-contain"
+          />
         </button>
         <button
           onClick={onNext}
           className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
         >
-          <Image src={next} alt="Next" className="w-6 h-6 object-contain" />
+          <Image
+            src={next}
+            alt="Next"
+            className="w-full h-full object-contain"
+          />
         </button>
       </div>
     </div>

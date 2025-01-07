@@ -13,7 +13,7 @@ export function ContractSimulatorExplanationScreen({
   currentStep,
 }) {
   return (
-    <div className="absolute top-1/4 -right-20 w-full max-w-md mt-20">
+    <div className="absolute top-1/4 -right-20 w-full max-w-md mt-24">
       <Button
         variant="ghost"
         onClick={onClose}
@@ -23,36 +23,56 @@ export function ContractSimulatorExplanationScreen({
       </Button>
 
       <div className="bg-white rounded-2xl p-6 w-full shadow-lg relative">
-      <div className="absolute -bottom-3 left-[50px] -translate-x-1/2 w-0 h-0 border-l-[12px] border-l-transparent border-r-[12px] border-r-transparent border-t-[16px] border-t-white" />
-        
+        {/* Rounded pointer tip - pointing down */}
+        <div
+          className="absolute -bottom-2 left-[50px] -translate-x-1/2 w-6 h-6 bg-white"
+          style={{
+            transform: "rotate(45deg)",
+            borderBottomRightRadius: "4px",
+          }}
+        />
+
         <div className="mb-4">
-          <h3 className="text-[#424259] text-lg font-semibold mb-2">
+          <h3 className="text-[#424259] text-lg font-semibold mb-2 italic">
             How to Simulate Your Contract Discounts?
           </h3>
           <p className="text-[#424259] text-base italic">
-            Time to play with the sliders! <span className="font-semibold">Adjust</span> your contract discounts in real-time to see how much you can save annually. The goal is to <span className="font-semibold">maximize your competitive score!</span>
+            Time to play with the sliders!{" "}
+            <span className="font-semibold">Adjust</span> your contract
+            discounts in real-time to see how much you can save annually. The
+            goal is to{" "}
+            <span className="font-semibold">
+              maximize your competitive score!
+            </span>
           </p>
         </div>
-        <div className="text-sm text-gray-500 italic">
+        <div className="text-sm text-[#1E1E1E] italic font-medium">
           Step {currentStep} of 5
         </div>
       </div>
 
-      <div className="absolute -bottom-10 right-0 flex justify-end gap-2">
+      <div className="absolute -bottom-12 left-0 right-0 flex justify-end pt-2 gap-3">
         <button
           onClick={onPrev}
           className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
         >
-          <Image src={prev} alt="Previous" className="w-6 h-6 object-contain" />
+          <Image
+            src={prev}
+            alt="Previous"
+            className="w-full h-full object-contain"
+          />
         </button>
         <button
           onClick={onNext}
           className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
         >
-          <Image src={next} alt="Next" className="w-6 h-6 object-contain" />
+          <Image
+            src={next}
+            alt="Next"
+            className="w-full h-full object-contain"
+          />
         </button>
       </div>
     </div>
   );
 }
-
