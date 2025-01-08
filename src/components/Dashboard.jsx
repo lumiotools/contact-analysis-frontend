@@ -1,22 +1,22 @@
-"use client";
+"use client"
 
 import React, { useEffect, useState, useRef } from "react";
-import { Card } from "./ui/card";
-import { GaugeChart } from "./gauge-chart";
-import { SavingsChart } from "./savings-graph";
-import ContractSimulator from "./ContractSimulator";
+import { Card } from "@/components/ui/card";
+import { GaugeChart } from "@/components/gauge-chart";
+import { SavingsChart } from "@/components/savings-graph";
+import ContractSimulator from "@/components/ContractSimulator";
 import { extractContractData } from "@/utils/extractContractData";
-import { DashboardHeader } from "./DashboardHeader";
-import { DashboardChallenges } from "./Challenges";
-import { WelcomeScreen } from "./onboarding/WelcomeScreen";
-import { LevelExplanationScreen } from "./onboarding/LevelExplanationScreen";
-import { GaugeExplanationScreen } from "./onboarding/GaugeExplanationScreen";
-import { SavingsExplanationScreen } from "./onboarding/SavingsExplanationScreen";
-import { ContractSimulatorExplanationScreen } from "./onboarding/ContractSimulatorExplanationScreen";
-import { ChallengesExplanationScreen } from "./onboarding/ChallengesExplanationScreen";
+import { DashboardHeader } from "@/components/DashboardHeader";
+import { DashboardChallenges } from "@/components/Challenges";
+import { WelcomeScreen } from "@/components/onboarding/WelcomeScreen";
+import { LevelExplanationScreen } from "@/components/onboarding/LevelExplanationScreen";
+import { GaugeExplanationScreen } from "@/components/onboarding/GaugeExplanationScreen";
+import { SavingsExplanationScreen } from "@/components/onboarding/SavingsExplanationScreen";
+import { ContractSimulatorExplanationScreen } from "@/components/onboarding/ContractSimulatorExplanationScreen";
+import { ChallengesExplanationScreen } from "@/components/onboarding/ChallengesExplanationScreen";
 import Confetti from "react-confetti";
 import { AnimatePresence } from "framer-motion";
-import { OnboardingCompletedCard } from "./onboarding/OnboardingCompletedCard";
+import { OnboardingCompletedCard } from "@/components/onboarding/OnboardingCompletedCard";
 
 export default function Dashboard() {
   const [contractData, setContractData] = useState(null);
@@ -80,6 +80,7 @@ export default function Dashboard() {
     setShowOnboarding(false);
     setShowChallengesDropdown(false);
     setRemoveBlur(true);
+    setAnimateContract(true); // Trigger animation when closing onboarding
   };
 
   const handleNextStep = () => {
@@ -116,6 +117,7 @@ export default function Dashboard() {
 
   const handleCloseOnboardingCompleted = () => {
     setShowOnboardingCompleted(false);
+    setAnimateContract(true); // Trigger animation when closing onboarding completed
   };
 
   const renderOnboardingScreen = () => {
@@ -187,7 +189,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen relative font-montserrat">
       <div
         className={`transition-all duration-300 ${
           showOnboarding && !removeBlur ? "pointer-events-none" : ""

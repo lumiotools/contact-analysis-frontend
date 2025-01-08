@@ -55,7 +55,7 @@ export function DashboardHeader({
   const level = getCompetitiveLevel(competitiveScore);
 
   return (
-    <div className="flex items-center gap-8 rounded-lg py-4">
+    <div className="flex items-center gap-8 rounded-lg py-2">
       {/* Logo and title section with backdrop */}
       <div className="flex items-center gap-3">
         {/* Icon container with glow effect */}
@@ -77,7 +77,7 @@ export function DashboardHeader({
             }}
           />
           {/* Icon */}
-          <div className="relative w-20 h-20 -ml-4">
+          <div className="relative w-16 h-16 -ml-2">
             <Image
               src={level.icon}
               alt={`${level.title} Icon`}
@@ -87,7 +87,7 @@ export function DashboardHeader({
           </div>
         </div>
         {/* Title with backdrop */}
-        <div className="relative">
+        <div className="relative -ml-3">
           <div
             className="absolute inset-0 blur-lg opacity-50"
             style={{
@@ -104,12 +104,12 @@ export function DashboardHeader({
       {/* Level Progress Section */}
       <div className="flex items-center gap-4">
         <div className="relative w-[300px]">
-          <div className="flex justify-between items-center mb-1">
+          <div className="flex justify-between items-center">
             {/* Level indicator with golden backdrop */}
             <div className="relative">
               <div className="absolute inset-0 bg-[#FFD572]/20 blur-xl rounded-md" />
               <span
-                className="relative text-lg font-bold italic ml-2.5 px-3 py-1 rounded-md"
+                className="relative text-lg font-bold italic -ml-1 px-3 rounded-md"
                 style={{
                   background:
                     "linear-gradient(180deg, #FFD572 0%, #FEBD38 100%)",
@@ -121,7 +121,7 @@ export function DashboardHeader({
               </span>
             </div>
             {/* XP Counter */}
-            <div className="flex items-center gap-2 text-base text-[#E8E8E8] italic mr-1">
+            <div className="flex items-center gap-1 text-base text-[#E8E8E8] italic">
               <span className="font-bold">{currentXP}XP</span>
               <span className="font-medium">/</span>
               <span className="font-medium">{maxXP}XP</span>

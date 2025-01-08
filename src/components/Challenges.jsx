@@ -1,12 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Target, Info } from 'lucide-react';
+import { Target, Info } from "lucide-react";
+import challeges from "../../public/challeges.svg";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Image from "next/image";
 
 export function DashboardChallenges({ isOpen: propIsOpen = false }) {
   const [isOpen, setIsOpen] = useState(propIsOpen);
@@ -59,11 +61,16 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
             border: `2px solid ${isOpen ? "#FFD572" : "#FFFFFF"}`,
           }}
         >
-          <Target
+          {/* <Target
             size={32}
             className="text-[#FFD572]"
             style={{ strokeWidth: 2.5 }}
-          />
+          /> */}
+          <Image
+            src={challeges}
+            alt="challeges"
+            className="w-8 h-8 object-contain"
+          ></Image>
           <span
             className="font-bold text-xl italic"
             style={{
@@ -79,7 +86,7 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
 
       <DropdownMenuContent
         align="end"
-        className="w-[310px] p-4 mt-2"
+        className="w-[310px] p-4 mt-2 rounded-xl"
         style={{
           backgroundColor: "#464653",
           border: `1px solid ${
@@ -99,8 +106,8 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
           onScroll={handleScroll}
           className="space-y-2 h-[160px] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#22222E] [&::-webkit-scrollbar-track]:bg-[#22222E]/20"
           style={{
-            scrollbarWidth: "none",
-            scrollbarColor: '#22222E #22222E20'
+            scrollbarWidth: "thin",
+            scrollbarColor: "#22222E #22222E20",
           }}
         >
           {/* Ongoing Challenges Header */}
@@ -184,12 +191,29 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
               Tips
             </span>
           </div>
-          <p className="text-white/90 italic text-xs leading-relaxed">
+          {/* <p className="text-white/90 italic text-xs leading-relaxed">
             Use the{" "}
             <span className="underline font-semibold">
-              Contract Discount Negotiation
+              Contract Discount Negotiation Chatbot
             </span>{" "}
-            Chatbot to get discounts and complete the challenge
+             to get discounts and complete the challenge
+          </p> */}
+
+          <p className="text-white/90 italic text-xs leading-relaxed">
+            Use the{" "}
+            <a
+              href="#contact-chat-bot"
+              className="underline font-semibold cursor-pointer hover:text-[#FFD572] transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById("contact-chat-bot")?.scrollIntoView({
+                  behavior: "smooth",
+                });
+              }}
+            >
+              Contract Discount Negotiation Chatbot
+            </a>{" "}
+            to get discounts and complete the challenge
           </p>
         </div>
       </DropdownMenuContent>

@@ -36,7 +36,7 @@ export default function ContractSimulator({
   // Update competitive score when discounts change
   useEffect(() => {
     if (Object.keys(discounts).length === 0) {
-      setCompetitiveScore(data?.competitiveScore || 84); // Set to default if no discounts
+      setCompetitiveScore(data?.competitiveScore || 84);
       return;
     }
 
@@ -59,8 +59,8 @@ export default function ContractSimulator({
   useEffect(() => {
     if (animate) {
       setAnimatedScore(0);
-      const animationDuration = 2000; // 2 seconds
-      const steps = 60; // 60 frames for smooth animation
+      const animationDuration = 2000;
+      const steps = 60;
       const stepDuration = animationDuration / steps;
 
       let step = 0;
@@ -83,13 +83,9 @@ export default function ContractSimulator({
     const minPosition = 20;
     const maxPosition = `calc(100% - 40px)`;
 
-    if (value <= 10) {
-      return `${minPosition}px`;
-    } else if (value >= 90) {
-      return maxPosition;
-    } else {
-      return `calc(${value}% - 20px)`;
-    }
+    if (value <= 10) return `${minPosition}px`;
+    if (value >= 90) return maxPosition;
+    return `calc(${value}% - 20px)`;
   };
 
   return (
@@ -141,24 +137,24 @@ export default function ContractSimulator({
 
             <div className="mt-8">
               <div className="flex flex-col gap-3">
-                <span className="text-sm font-medium text-white">
+                <h3 className="text-2xl font-medium text-white">
                   Competitive Score
-                </span>
-                <div className="relative h-10 w-full md:w-[370px] overflow-hidden rounded-full bg-[#363647]">
+                </h3>
+                <div className="relative h-12 w-full overflow-hidden rounded-full bg-[#363647]">
                   <div
-                    className="h-full absolute left-0 transition-all duration-300 ease-in-out"
+                    className="h-full absolute left-0 transition-all duration-300 ease-in-out rounded-full"
                     style={{
                       width: `${animatedScore}%`,
                       background:
-                        "linear-gradient(90deg, #FFD572 0%, #FEBD38 100%)",
+                        "linear-gradient(90deg, #FFD54F 0%, #FFC107 100%)",
                     }}
                   />
                   <div className="absolute inset-0 flex items-center justify-end pr-6">
-                    <span className="text-lg font-semibold">
+                    <span className="text-xl font-semibold">
                       <span className="text-white">
                         {Math.round(animatedScore)}
                       </span>
-                      <span className="text-white">/100</span>
+                      <span className="text-white text-opacity-60">/100</span>
                     </span>
                   </div>
                 </div>

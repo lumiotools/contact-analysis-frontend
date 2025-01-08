@@ -17,11 +17,12 @@ export function SavingsExplanationScreen({
       <Button
         variant="ghost"
         onClick={onClose}
-        className="absolute -top-8 right-2 text-[#FFB323] hover:text-[#FFB323]/80 cursor-pointer hover:bg-transparent p-0 text-base font-semibold italic">       
+        className="absolute -top-8 right-2 text-[#FFB323] hover:text-[#FFB323]/80 cursor-pointer hover:bg-transparent p-0 text-base font-semibold italic"
+      >
         Skip
       </Button>
 
-      <div className="bg-white rounded-2xl p-6 w-full shadow-lg relative">
+      <div className="bg-white rounded-2xl px-6 py-3 w-full shadow-lg relative">
         {/* Rounded pointer tip - pointing right */}
         <div
           className="absolute -right-1 top-10 w-6 h-6 bg-white"
@@ -48,27 +49,27 @@ export function SavingsExplanationScreen({
         </div>
       </div>
 
-      <div className="absolute -bottom-12 left-0 right-0 flex justify-end pt-2 gap-3">
-        <button
+      <div className="absolute left-0 right-0 flex items-end justify-end mt-2 pt-2 gap-3">
+        <div
+          className="w-8 h-8 rounded-full flex items-center justify-center mb-6 cursor-pointer hover:opacity-80"
           onClick={onPrev}
-          className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
         >
           <Image
             src={prev}
             alt="Previous"
             className="w-full h-full object-contain"
           />
-        </button>
-        <button
+        </div>
+        <div
+          className="w-8 h-8 rounded-full flex items-center justify-center mb-6 cursor-pointer hover:opacity-80"
           onClick={onNext}
-          className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
         >
           <Image
             src={next}
             alt="Next"
             className="w-full h-full object-contain"
           />
-        </button>
+        </div>
       </div>
     </div>
   );

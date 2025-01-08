@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -33,6 +35,8 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --scrollbar-track: hsl(0 0% 14.9%);
+    --scrollbar-thumb: hsl(0 0% 25%);
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -59,6 +63,8 @@ body {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+    --scrollbar-track: hsl(0 0% 10%);
+    --scrollbar-thumb: hsl(0 0% 20%);
   }
 }
 
@@ -69,4 +75,39 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom Scrollbar Styles */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* Webkit browsers (Chrome, Safari, etc.) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(0 0% 30%);
+}
+
+/* Hide scrollbar when not hovering (optional) */
+::-webkit-scrollbar-thumb:vertical {
+  min-height: 30px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+  min-width: 30px;
 }
