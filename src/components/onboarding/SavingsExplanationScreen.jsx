@@ -22,7 +22,7 @@ export function SavingsExplanationScreen({
         Skip
       </Button>
 
-      <div className="bg-white rounded-2xl px-6 py-3 w-full shadow-lg relative">
+      <div className="bg-white rounded-2xl p-6 pb-3 w-full shadow-lg relative">
         {/* Rounded pointer tip - pointing right */}
         <div
           className="absolute -right-1 top-10 w-6 h-6 bg-white"

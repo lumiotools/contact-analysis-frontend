@@ -22,7 +22,7 @@ export function LevelExplanationScreen({
         Skip
       </Button>
 
-      <div className="bg-white rounded-2xl px-6 py-3 w-full shadow-lg relative">
+      <div className="bg-white rounded-2xl p-6 pb-3 w-full shadow-lg relative">
         {/* Rounded pointer tip */}
         <div
           className="absolute -top-4 left-[50px] -translate-x-1/2 w-6 h-6 bg-white"

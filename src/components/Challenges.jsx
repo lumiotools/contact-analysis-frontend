@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Target, Info } from "lucide-react";
 import challeges from "../../public/challeges.svg";
+import challegesWhite from "../../public/challeges-gray.svg";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -49,7 +50,7 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
       <DropdownMenuTrigger asChild>
         <button
           onClick={handleButtonClick}
-          className="relative flex items-center gap-3 px-12 py-2 rounded-full transition-all hover:opacity-90"
+          className="relative flex items-center gap-3 px-8 py-2 rounded-full transition-all hover:opacity-90"
           style={{
             background: "#464653",
             boxShadow: `
@@ -69,7 +70,7 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
           <Image
             src={challeges}
             alt="challeges"
-            className="w-8 h-8 object-contain"
+            className="w-6 h-6 object-contain"
           ></Image>
           <span
             className="font-bold text-xl italic"
@@ -86,10 +87,10 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
 
       <DropdownMenuContent
         align="end"
-        className="w-[310px] p-4 mt-2 rounded-xl"
+        className="w-[310px] p-4 mt-2 rounded-[1.25rem]"
         style={{
           backgroundColor: "#464653",
-          border: `1px solid ${
+          border: `2px solid ${
             isOpen ? "#FFD572" : "rgba(255, 255, 255, 0.1)"
           }`,
           boxShadow: `
@@ -107,7 +108,7 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
           className="space-y-2 h-[160px] overflow-y-auto pr-2 [&::-webkit-scrollbar]:w-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#22222E] [&::-webkit-scrollbar-track]:bg-[#22222E]/20"
           style={{
             scrollbarWidth: "thin",
-            scrollbarColor: "#22222E #22222E20",
+            scrollbarColor: "#555564",
           }}
         >
           {/* Ongoing Challenges Header */}
@@ -133,7 +134,11 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
               key={index}
               className="flex items-center gap-2 py-1 rounded-lg transition-colors cursor-pointer group"
             >
-              <Target size={20} className="text-white" />
+              <Image
+                src={challegesWhite}
+                alt="challeges"
+                className="w-5 h-5 object-contain"
+              ></Image>
               <span className="text-xs italic font-semibold text-white/90">
                 {challenge.title}
               </span>
@@ -167,7 +172,12 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
                 key={index}
                 className="flex items-center gap-2 py-1 rounded-lg transition-colors cursor-pointer group mt-2"
               >
-                <Target size={20} className="text-[#FFD572]" />
+                {/* <Target size={20} className="text-[#FFD572]" /> */}
+                <Image
+                  src={challeges}
+                  alt="challeges"
+                  className="w-5 h-5 object-contain text-[#FFD572]"
+                ></Image>
                 <span className="text-xs italic font-semibold text-white/90">
                   {challenge.title}
                 </span>
@@ -202,11 +212,11 @@ export function DashboardChallenges({ isOpen: propIsOpen = false }) {
           <p className="text-white/90 italic text-xs leading-relaxed">
             Use the{" "}
             <a
-              href="#contact-chat-bot"
+              href="#rates-negotaition-chat-bot"
               className="underline font-semibold cursor-pointer hover:text-[#FFD572] transition-colors"
               onClick={(e) => {
                 e.preventDefault();
-                document.getElementById("contact-chat-bot")?.scrollIntoView({
+                document.getElementById("rates-negotaition-chat-bot")?.scrollIntoView({
                   behavior: "smooth",
                 });
               }}

@@ -144,7 +144,7 @@ export function ContractChat() {
   }, [chatHistory]);
 
   return (
-    <Card className="bg-[#23232F]/90 border-[#2A2A36] mt-8" id="contact-chat-bot">
+    <Card className="bg-[#23232F]/90 border-[#2A2A36] mt-8">
       <CardHeader className="border-b border-[#2A2A36]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

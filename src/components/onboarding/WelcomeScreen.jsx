@@ -23,7 +23,7 @@ export function WelcomeScreen({ onClose, onNext }) {
           <div className="mb-6">
             <AnimatedRocket />
           </div>
-          <h2 className="text-2xl font-semibold text-center text-gray-800">
+          <h2 className="text-2xl font-bold text-center text-gray-800 italic">
             Welcome to the Contract Discounts
           </h2>
         </div>

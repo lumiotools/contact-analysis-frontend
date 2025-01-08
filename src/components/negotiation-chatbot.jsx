@@ -154,7 +154,7 @@ export function NegotiationChatbot() {
   }, [chatHistory]);
 
   return (
-    <Card className="bg-[#23232F]/90 border-[#2A2A36] mt-8">
+    <Card className="bg-[#23232F]/90 border-[#2A2A36] mt-8" id="rates-negotaition-chat-bot">
       <CardHeader className="border-b border-[#2A2A36]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

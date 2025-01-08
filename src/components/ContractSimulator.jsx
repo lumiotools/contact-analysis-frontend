@@ -94,7 +94,7 @@ export default function ContractSimulator({
         <div className="flex-shrink-0 md:w-1/2 md:sticky md:top-8 h-full">
           <div className="flex flex-col h-full justify-between">
             <div>
-              <h2 className="text-base font-semibold tracking-wide text-[#E8E8E8]">
+              <h2 className="text-xl font-semibold tracking-wide text-[#E8E8E8]">
                 SIMULATE YOUR CONTRACT DISCOUNTS
               </h2>
               <p className="mt-1 text-sm text-[#B5B5B5]">
@@ -126,7 +126,7 @@ export default function ContractSimulator({
                       )
                     )}
                   </span>
-                  <span className="text-3xl font-medium text-[#FFA726]">k</span>
+                  <span className="text-3xl font-medium text-[#FFA726] capitalize ml-0.5">K</span>
                 </div>
                 <p className="mt-1 text-sm text-[#B5B5B5]">
                   You Can Save Annually with{" "}
@@ -140,7 +140,7 @@ export default function ContractSimulator({
                 <h3 className="text-2xl font-medium text-white">
                   Competitive Score
                 </h3>
-                <div className="relative h-12 w-full overflow-hidden rounded-full bg-[#363647]">
+                <div className="relative h-10 w-full overflow-hidden rounded-full bg-[#363647]">
                   <div
                     className="h-full absolute left-0 transition-all duration-300 ease-in-out rounded-full"
                     style={{
@@ -154,7 +154,7 @@ export default function ContractSimulator({
                       <span className="text-white">
                         {Math.round(animatedScore)}
                       </span>
-                      <span className="text-white text-opacity-60">/100</span>
+                      <span className="text-white">/100</span>
                     </span>
                   </div>
                 </div>
