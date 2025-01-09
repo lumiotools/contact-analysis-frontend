@@ -26,7 +26,7 @@ export const OnboardingCompletedCard = ({ userName, onClose }) => {
       }}
       className="absolute bottom-6 -right-32 z-50"
     >
-      <Card className="bg-white text-gray-800 shadow-lg w-[400px] border-0">
+      <Card className="bg-white text-gray-800 shadow-lg w-[400px] border-0 italic">
         <motion.div
           initial={{ backgroundColor: "white" }}
           animate={{ backgroundColor: "white" }}
