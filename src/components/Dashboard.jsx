@@ -16,7 +16,7 @@ import { ContractSimulatorExplanationScreen } from "@/components/onboarding/Cont
 import { ChallengesExplanationScreen } from "@/components/onboarding/ChallengesExplanationScreen";
 import Confetti from "react-confetti";
 import { AnimatePresence } from "framer-motion";
-import { OnboardingCompletedCard } from "@/components/onboarding/OnboardingCompletedCard";
+import {OnboardingCompletedCard} from "./onboarding/OnboardingCompletedCard";
 
 export default function Dashboard() {
   const [contractData, setContractData] = useState(null);

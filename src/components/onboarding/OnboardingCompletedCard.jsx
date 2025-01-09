@@ -1,17 +1,38 @@
-import React, { useEffect } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent } from "../ui/card";
-import { X } from "lucide-react";
-import { Button } from "../ui/button";
+"use client"
+
+import React, { useEffect, useState } from "react"
+import { motion } from "framer-motion"
+import { Card, CardContent } from "../ui/card"
+import { Button } from "../ui/button"
 
 export const OnboardingCompletedCard = ({ userName, onClose }) => {
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, 55000); // Close after 5.5 seconds
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
 
-    return () => clearTimeout(timer);
-  }, [onClose]);
+  useEffect(() => {
+    const updateDimensions = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      })
+    }
+
+    updateDimensions()
+    window.addEventListener('resize', updateDimensions)
+
+    const timer = setTimeout(() => {
+      onClose()
+    }, 5500)
+
+    return () => {
+      window.removeEventListener('resize', updateDimensions)
+      clearTimeout(timer)
+    }
+  }, [onClose])
+
+  const position = {
+    top: `${dimensions.height + 500}px`, // 120px from bottom of viewport
+    left: `${dimensions.width - 424}px`, // 400px card width + 24px right margin
+  }
 
   return (
     <motion.div
@@ -22,9 +43,10 @@ export const OnboardingCompletedCard = ({ userName, onClose }) => {
         type: "spring",
         stiffness: 300,
         damping: 30,
-        exit: { duration: 0.2, ease: "easeOut" }, // Faster exit animation
+        exit: { duration: 0.2, ease: "easeOut" },
       }}
-      className="absolute bottom-6 -right-32 z-50"
+      style={position}
+      className="fixed z-50"
     >
       <Card className="bg-white text-gray-800 shadow-lg w-[400px] border-0 italic">
         <motion.div
@@ -40,13 +62,13 @@ export const OnboardingCompletedCard = ({ userName, onClose }) => {
           >
             Cancel
           </Button>
-          <h3 className="text font-semibold mb-2">Onboarding Completed!</h3>
+          <h3 className="text-lg font-semibold mb-2">Onboarding Completed!</h3>
           <p className="text-base text-gray-600">
-            🎉 Congratulations, {userName}! You've completed your onboarding
+            🎉 Congratulations, {userName}! You&apos;ve completed your onboarding
             tour, start exploring and get started with your first challenge.
           </p>
         </CardContent>
       </Card>
     </motion.div>
-  );
-};
+  )
+}

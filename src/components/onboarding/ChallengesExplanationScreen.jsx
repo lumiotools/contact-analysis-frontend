@@ -13,7 +13,7 @@ export function ChallengesExplanationScreen({
   currentStep,
 }) {
   return (
-    <div className="absolute top-40 right-1/3 w-full max-w-md mr-2">
+    <div className="absolute top-40 right-1/3 w-full max-w-md mr-8">
       <Button
         variant="ghost"
         onClick={onClose}
