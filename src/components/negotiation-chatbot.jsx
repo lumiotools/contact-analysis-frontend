@@ -59,7 +59,7 @@ export function NegotiationChatbot() {
 
   const fetchCarriers = async () => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_RATES_NEGOTIATION_CHAT_API_URL}/carriers`
+      `${process.env.NEXT_PUBLIC_RATES_NEGOTIATION_CHAT_API_URL}/api/carriers`
     );
     const data = await response.json();
     setCarriers(data.carriers);
@@ -87,7 +87,7 @@ export function NegotiationChatbot() {
       const res = await (
         await fetch(
           process.env.NEXT_PUBLIC_RATES_NEGOTIATION_CHAT_API_URL +
-            "/rates-negotiation-chat",
+            "/api/rates-negotiation-chat",
           {
             signal: controller.signal,
             method: "POST",
@@ -290,7 +290,11 @@ export function NegotiationChatbot() {
               </SelectTrigger>
               <SelectContent className="bg-[#23232F] border-[#2A2A36] text-white">
                 {carriers?.map((carrier) => (
-                  <SelectItem key={carrier.value} value={carrier.value} className="focus:bg-orange-500 focus:text-white">
+                  <SelectItem
+                    key={carrier.value}
+                    value={carrier.value}
+                    className="focus:bg-orange-500 focus:text-white"
+                  >
                     {carrier.label}
                   </SelectItem>
                 ))}

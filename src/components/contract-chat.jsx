@@ -84,7 +84,7 @@ export function ContractChat() {
       const controller = new AbortController();
       setController(controller);
       const res = await (
-        await fetch(process.env.NEXT_PUBLIC_CONTRACT_CHAT_API_URL, {
+        await fetch(process.env.NEXT_PUBLIC_CONTRACT_CHAT_API_URL + "/api/chat", {
           signal: controller.signal,
           method: "POST",
           headers: {

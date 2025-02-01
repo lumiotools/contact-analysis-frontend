@@ -56,14 +56,14 @@ export default function IntroPage() {
         top_n: 100,
       };
       const { data: graphResponse } = await axios.post(
-        process.env.NEXT_PUBLIC_GRAPH_SERVER_URL,
+        process.env.NEXT_PUBLIC_GRAPH_SERVER_URL + "/analyze_contracts",
         graphApiBody
       );
       const graphApiJsonResponse = JSON.parse(parseJson(graphResponse));
       console.log("graph", graphApiJsonResponse);
       localStorage.setItem("graphData", JSON.stringify(graphApiJsonResponse));
       const { data: discountApiResponse } = await axios.post(
-        process.env.NEXT_PUBLIC_SERVER_URL,
+        process.env.NEXT_PUBLIC_SERVER_URL + "/api/analyze",
         data
       );
       localStorage.setItem("fileName", JSON.stringify(discountApiResponse.file_name));
@@ -85,7 +85,7 @@ export default function IntroPage() {
   };
 
   useEffect(() => {
-    (async () => {})();
+    (async () => { })();
   }, []);
 
   const benefits = [
@@ -315,11 +315,10 @@ export default function IntroPage() {
                             <div className="relative">
                               <label
                                 htmlFor="pdf"
-                                className={`flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${
-                                  isUploaded
-                                    ? "border-green-500 bg-green-500/10"
-                                    : "border-gray-600 hover:bg-[#2A2A36]"
-                                }`}
+                                className={`flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-xl cursor-pointer transition-colors ${isUploaded
+                                  ? "border-green-500 bg-green-500/10"
+                                  : "border-gray-600 hover:bg-[#2A2A36]"
+                                  }`}
                               >
                                 <div className="flex flex-col items-center justify-center py-4">
                                   {isUploaded ? (
